@@ -1,0 +1,546 @@
+*,
+*::before,
+*::after{
+	margin: 0;
+	padding: 0;
+	box-sizing: inherit;
+}
+body, html {
+	height: 100%;
+  }
+
+
+
+
+
+/*FORMS STYLE START*/
+.input-control{
+	width: 100%;
+	height: inherit;
+	display: block;
+	padding: 0.375rem 0.75rem;
+	color: #495057;
+	font-size: 1.1rem;
+	font-weight: 400;
+	line-height: 1.5;
+	border: 1px solid #ced4da;
+	border-radius: 0.10rem;
+	background-color: #ffffff;
+}
+
+.col-1, .col-2, .col-3, .col-4, .col-5, .col-6, .col-7, .col-8, .col-9, .col-10, .col-11, .col-12{
+  position: relative;
+  width: 100%;
+  padding-right: 15px;
+  padding-left: 15px;
+}
+@media (min-width: 576px) {}
+@media (min-width: 768px) {}
+@media (min-width: 992px) {
+	.input-control{
+	width: 100%;
+	height: inherit;
+	display: block;
+	padding: 0.375rem 0.75rem;
+	color: #495057;
+	font-size: 1.1rem;
+	font-weight: 400;
+	line-height: 1.5;
+	border: 1px solid #ced4da;
+	border-radius: 0.10rem;
+	background-color: #ffffff;
+ }
+
+.col-1, .col-2, .col-3, .col-4, .col-5, .col-6, .col-7, .col-8, .col-9, .col-10, .col-11, .col-12{
+  position: relative;
+  width: 100%;
+  padding-right: 15px;
+  padding-left: 15px;
+ }
+}
+.myLogo{
+	color: #fff;
+	font-size: 30px;
+	font-weight: bold;
+}
+.parallax {
+	
+	height:100px;width:100%;
+	background-attachment: fixed;
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: cover;
+   background-image: url("images/adventure-2.jpg");
+  }
+  
+  @media only screen and (max-device-width: 1366px) {
+	.parallax {
+	  background-attachment: scroll;
+	}
+  }
+@media (min-width: 1200px) {}
+/*FORMS STYLE END*/
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+html{
+	font-family: 'Nunito', sans-serif;
+	font-size: 10px;
+	box-sizing: border-box;
+}
+a{
+	text-decoration: none;
+}
+ul{
+	list-style: none;
+}
+p{
+	font-size: 1.6rem;
+}
+img{
+	width: 100%;
+	max-width: 100%;
+	height: auto;
+}
+section{
+	padding: 5rem 0;
+}
+header{
+	width: 100%;
+	height: 5rem;
+	position: absolute;
+	top: 0;
+	left: 0;
+	z-index: 1;
+}
+.container{
+	width: 100%;
+	max-width: 98rem;
+	margin: 0 auto;
+	padding: 0 1.5rem;
+}
+nav{
+	width: 100%;
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	padding: 1rem 0;
+	border-bottom: 1px solid rgba(225,225,225,2);
+}
+.nav-brand{
+	width: 4rem;
+}
+.menu-icons{
+	font-size: 3.5rem;
+	color: #fafafa;
+	cursor: pointer;
+}
+.close i{
+	color: #cb64cb
+}
+.nav-list{
+	width: 25rem;
+	height: 100vh;
+	background-color: #d7d4ed;
+	position: fixed;
+	top: 0;
+	right: -26rem;
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	justify-content: center;
+	z-index: 1500;
+	transition: all 650ms ease-in-out;
+}
+.nav-list.active{
+	right: 0;
+}
+.close{
+	position: absolute;
+	top: 1rem;
+	right: 1.5rem;
+}
+.nav-item{
+	margin: 1.5rem 0;
+}
+.nav-link{
+	font-size: 1.6rem;
+	text-transform: uppercase;
+	color: rgba(0,0,0,.7);
+}
+.hero{
+	width: 100%;
+	height: 80vh;
+	background-image: linear-gradient(135deg, rgba(49,24,131,0.9) 0%, rgba(72,56,149,0.8)100%), url("images/adventure.png");
+	background-repeat: no-repeat;
+	background-size: cover;
+	position: relative;
+}
+.hero::before{
+	content: "";
+	position: absolute;
+	left: 0;
+	bottom: -3px;
+	height: 4.7rem;
+	background: url('images/wave.png') center no-repeat;
+	background-size: cover;
+}
+.main-message{
+	float: right;
+	width: 50%;
+	max-width: 50rem;
+	color: #fafafa;
+	text-transform: uppercase;
+	transform: translateY(20%);
+}
+.main-message h3{
+	font-size: 1.6rem;
+}
+.main-message h1{
+	font-family: 'Aldrich', sans-serif;
+	font-size: 4rem;
+	margin: 1rem 0;
+}
+.main-message p{
+	text-transform: lowercase;
+}
+.main-message1{
+	max-width: 50rem;
+	color: #fafafa;
+	text-transform: uppercase;
+	transform: translateY(20%);
+}
+.main-message1 h3{
+	font-size: 1.6rem;
+}
+.main-message1 h1{
+	font-family: 'Aldrich', sans-serif;
+	font-size: 4rem;
+	margin: 1rem 0;
+}
+.main-message1 p{
+	text-transform: lowercase;
+}
+.btn{
+	background-color: #eb648c;
+	border-radius: 2rem;
+	color: #fafafafa;
+	display: inline-block;
+	margin-top: 2rem;
+	padding: 1rem 2.5rem;
+	text-transform: uppercase;
+	transition: background-color 650ms;
+}
+.btn:hover{
+	background-color: #ce587b;
+}
+.experience-outdoors{
+	padding: 40px 0 0 0;
+}
+.title-heading{
+	text-align: center;
+	text-transform: uppercase;
+	margin-bottom: 10rem;
+	color: rgba(0,0,0,.7);
+}
+.title-heading h3{
+	font-size: 1.4rem;
+}
+.title-heading h1{
+	font-family: 'Aldrich', sans-serif;
+	font-size: 2rem;
+	margin: .5rem 0 1rem;
+}
+.title-heading p{
+	text-transform: lowercase;
+}
+.activities-grid{
+	display: grid;
+	grid-template-columns: repeat(auto-fit, minmax(25rem, 1fr));
+	grid-gap: 2.5rem;
+}
+.activities-grid1{
+	display: grid;
+	grid-template-columns: repeat(auto-fit, minmax(25rem, 1fr));
+	grid-gap: 2.5rem;
+}
+.activities-grid-item{
+	height: 50rem;
+	padding: 5rem;
+	color: #fafafa;
+	position: relative;
+	display: flex;
+	flex-direction: column;
+	justify-content: center;
+	cursor: pointer;
+	z-index: 1;
+}
+.activities-grid-item::before{
+	content: "";
+	position: absolute;
+	top: 0;
+	left: 0;
+	width: 100%;
+	height: 100%;
+	border-radius: 30px;
+	background: linear-gradient(135deg, rgba(49,24,131,0.9) 0%, rgba(72,56,149,0.8)100%);
+	z-index: -1;
+}
+.star-gazing{
+	background-image: url('images/star-gazing.png');
+	background-attachment: fixed;
+	background-position: center;
+	background-repeat: no-repeat;
+	background-size: cover;
+}
+.hiking{
+	background: url('images/hiking.png') center no-repeat;
+	background-attachment: fixed;
+	background-position: center;
+	background-repeat: no-repeat;
+	background-size: cover;
+}
+.camping{
+	background: url('images/camping.png') center no-repeat;
+	background-attachment: fixed;
+	background-position: center;
+	background-repeat: no-repeat;
+	background-size: cover;
+}
+.activities-grid-item i{
+	font-size: 4rem;
+	color: #eb648c;
+}
+.activities-grid-item:hover {
+	transform: scale(1.1);
+  }
+.activities-grid-item h1{
+	font-family: 'Aldrich', sans-serif;
+	font-size: 1.7rem;
+	text-transform: uppercase;
+	margin: 2rem 0;
+}
+.testimonials{
+	width: 100%;
+	height: 80vh;
+	background: linear-gradient(135deg, rgba(49,24,131,0.9) 0%, rgba(72,56,149,0.8)100%), url('images/adventure-1.png') center no-repeat;
+	background-size: cover;
+	position: relative;
+}
+.testimonials::before{
+	content: "";
+	position: absolute;
+	top: 0;
+	left: 0;
+	width: 100%;
+	height: 4.7rem;
+	background-color: #ffffff;
+	background-size: cover;
+}
+.testimonial{
+	width: 100%;
+	color: #fafafa;
+	position: absolute;
+	top: 55%;
+	left: 50%;
+	transform: translate(-50%, -50%);
+	text-align: center;
+}
+.testimonial-text-box{
+	padding: 0 1.5rem;
+	margin-bottom: 2rem;
+	position: relative;
+}
+.testimonial-text-box i{
+	position: absolute;
+	top: -8rem;
+	left: 50%;
+	transform: translateX(-50%);
+	font-size: 8rem;
+	color: #ce587b;
+	opacity: .5;
+	z-index: -1;
+}
+.testimonial-customer img{
+	width: 10rem;
+	height: 10rem;
+	border-radius: 100%;
+	border: 3px solid #eb648c;
+}
+.item-container img{
+	width: 30rem;
+	height: 45rem;
+	border-radius: 5%;
+	border: 1px solid #eb648c;
+}
+.item-container{
+	float: left;
+	width: 30%;
+}
+.item-container-img{
+	width: 100%;
+	height: 100%;
+}
+.item-container-img img{
+	width: 100%;
+	height: 100%;
+	border-radius: 5%;
+}
+.activities-grid-adventure{
+	height: 50rem;
+	color: #fafafa;
+	position: relative;
+	display: flex;
+	flex-direction: column;
+	justify-content: center;
+	cursor: pointer;
+	z-index: 1;
+}
+.activities-grid-adventure::before{
+	content: "";
+	position: absolute;
+	top: 0;
+	left: 0;
+	width: 100%;
+	height: 100%;
+	border-radius: 30px;
+	background: linear-gradient(135deg, rgba(49,24,131,0.9) 0%, rgba(72,56,149,0.8)100%);
+	z-index: -1;
+}
+.activities-grid-adventure:hover {
+	transform: scale(1.1);
+  }
+.adventure-grid{
+	display: grid;
+	grid-template-columns: repeat(auto-fit, minmax(25rem, 1fr));
+	grid-gap: 2.5rem;
+	margin-bottom: 2rem;
+}
+.adventure-grid-item p{
+	color: rgba(0,0,0,.7);
+}
+footer{
+	padding: 2.5rem;
+	background-color: #d7d4ed;
+	text-align: center;
+	color: rgba(0,0,0,.7);
+}
+
+@media screen and (min-width: 350px){
+	.main-message{
+		transform: translateY(40%);
+	}
+	.main-message1{
+		transform: translateY(40%);
+	}
+}
+@media screen and (min-width: 470px){
+	.hero::before{
+		height: 9.4rem;
+		/* background: url('images/wave-medium.png') */
+		background-size: cover;
+	}
+	.testimonials::before{
+		height: 9.4rem;
+		/* background: url('images/wave-medium.png') */
+		background-size: cover;
+	}
+}
+@media screen and (min-width: 700px){
+	header{
+		height: 8rem;
+	}
+	.nav-brand{
+		width: 3.5rem;
+	}
+	.nav-list{
+		width: initial;
+		height: initial;
+		background-color: transparent;
+		position: initial;
+		top: initial;
+		right: initial;
+		flex-direction: row;
+		transition: initial;
+	}
+	.menu-icons{
+		display: none;
+	}
+	.nav-item{
+		margin: 0 2.5rem;
+	}
+	.nav-link, .current{
+		color: #fafafafa;
+		position: relative;
+		font-size: 1.3rem;
+	}
+	.nav-link::before, .current::before{
+		content: "";
+		position: absolute;
+		left: 0;
+		bottom: -.5rem;
+		background-color: #ce587b;
+		width: 100%;
+		height: 2px;
+		transform: scaleX(0);
+		transform-origin: left;
+		transition: all 650ms ease-in-out;
+	}
+	.nav-item a.current::before{
+		transform: scaleX(1);
+	}
+	.nav-item >a:hover{
+		transform: scaleX(1);
+	}
+	.hero{
+		height: 60vh;
+	}
+	.main-message{
+		transform: translateY(50%);
+	}
+	.main-message1{
+		transform: translateY(50%);
+	}
+	.title-heading h1{
+		font-size: 2.5rem;
+	}
+}
+@media screen and (min-width: 950px){
+	.hero::before{
+		height: 22.7rem;
+		/* background: url('images/wave-medium.png') */
+		background-size: cover;
+	}
+	.testimonials::before{
+		height: 22.7rem;
+		/* background: url('images/wave-medium.png') */
+		background-size: cover;
+	}
+}
+@media screen and (min-width: 1200px){
+	.hero::before{
+		height: 75vh;
+	}
+	/* .activities-grid-item i{
+		margin-top: 6rem;
+	} */
+}
