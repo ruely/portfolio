@@ -8,11 +8,13 @@ import 'package:portfolio/constants/text_styles.dart';
 class ExperienceCard extends StatelessWidget {
   final Experience experience;
   final bool isLast;
+  final bool isWideScreen;
 
   const ExperienceCard({
     super.key,
     required this.experience,
     this.isLast = false,
+    this.isWideScreen = true,
   });
 
   @override
@@ -24,14 +26,14 @@ class ExperienceCard extends StatelessWidget {
           Positioned(
             top: 0,
             bottom: 0,
-            left: 35,
+            left: isWideScreen ? 35 : 25,
             child: Container(
               width: 2,
               color: AppColors.accent.withOpacity(0.2),
             ),
           ),
         Padding(
-          padding: const EdgeInsets.only(left: 24),
+          padding: EdgeInsets.only(left: isWideScreen ? 24 : 16),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
@@ -39,10 +41,9 @@ class ExperienceCard extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Container(
-                    width: 48,
-                    height: 48,
-                    padding: EdgeInsets.all(5),
-                    margin: const EdgeInsets.only(right: 16),
+                    width: isWideScreen ? 48 : 40,
+                    height: isWideScreen ? 48 : 40,
+                    margin: EdgeInsets.only(right: isWideScreen ? 16 : 12),
                     decoration: BoxDecoration(
                       shape: BoxShape.circle,
                       color: Colors.white.withOpacity(0.1),
@@ -51,6 +52,7 @@ class ExperienceCard extends StatelessWidget {
                         width: 1,
                       ),
                     ),
+                    padding: EdgeInsets.all(3),
                     child: ClipRRect(
                       borderRadius: BorderRadius.circular(24),
                       child: Image.asset(
@@ -67,15 +69,19 @@ class ExperienceCard extends StatelessWidget {
                           crossAxisAlignment: CrossAxisAlignment.baseline,
                           textBaseline: TextBaseline.alphabetic,
                           children: [
-                            Text(
-                              experience.position,
-                              style: TextStyles.cardTitle,
+                            Flexible(
+                              child: Text(
+                                experience.position,
+                                style: TextStyles.cardTitle.copyWith(
+                                  fontSize: isWideScreen ? null : 18,
+                                ),
+                              ),
                             ),
                             const SizedBox(width: 12),
                             Container(
-                              padding: const EdgeInsets.symmetric(
-                                horizontal: 8,
-                                vertical: 4,
+                              padding: EdgeInsets.symmetric(
+                                horizontal: isWideScreen ? 8 : 6,
+                                vertical: isWideScreen ? 4 : 3,
                               ),
                               decoration: BoxDecoration(
                                 color: AppColors.accent.withOpacity(0.1),
@@ -83,7 +89,9 @@ class ExperienceCard extends StatelessWidget {
                               ),
                               child: Text(
                                 experience.duration,
-                                style: TextStyles.chip.copyWith(fontSize: 12),
+                                style: TextStyles.chip.copyWith(
+                                  fontSize: isWideScreen ? 12 : 10,
+                                ),
                               ),
                             ),
                           ],
@@ -91,13 +99,16 @@ class ExperienceCard extends StatelessWidget {
                         const SizedBox(height: 4),
                         Text(
                           experience.company,
-                          style: TextStyles.cardSubtitle.copyWith(fontSize: 18),
+                          style: TextStyles.cardSubtitle.copyWith(
+                            fontSize: isWideScreen ? null : 14,
+                          ),
                         ),
                         const SizedBox(height: 8),
                         Text(
                           experience.location,
                           style: TextStyles.body.copyWith(
                             fontStyle: FontStyle.italic,
+                            fontSize: isWideScreen ? null : 12,
                           ),
                         ),
                         const SizedBox(height: 20),
@@ -112,9 +123,9 @@ class ExperienceCard extends StatelessWidget {
                                         CrossAxisAlignment.start,
                                     children: [
                                       Padding(
-                                        padding: const EdgeInsets.only(
+                                        padding: EdgeInsets.only(
                                           top: 5,
-                                          right: 12,
+                                          right: isWideScreen ? 12 : 8,
                                         ),
                                         child: Icon(
                                           Icons.circle,
@@ -125,7 +136,9 @@ class ExperienceCard extends StatelessWidget {
                                       Expanded(
                                         child: Text(
                                           responsibility,
-                                          style: TextStyles.body,
+                                          style: TextStyles.body.copyWith(
+                                            fontSize: isWideScreen ? null : 13,
+                                          ),
                                         ),
                                       ),
                                     ],
@@ -139,7 +152,7 @@ class ExperienceCard extends StatelessWidget {
                   ),
                 ],
               ),
-              const SizedBox(height: 40),
+              SizedBox(height: isWideScreen ? 40 : 24),
             ],
           ),
         ),

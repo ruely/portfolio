@@ -1,7 +1,12 @@
+// ignore_for_file: deprecated_member_use
+
 import 'package:flutter/material.dart';
 import 'package:portfolio/models/project.dart';
 import 'package:portfolio/widgets/project_card.dart';
 import 'package:portfolio/widgets/section_header.dart';
+
+import '../constants/colors.dart';
+import '../constants/text_styles.dart';
 
 class ProjectsPage extends StatelessWidget {
   const ProjectsPage({super.key});
@@ -115,8 +120,24 @@ class ProjectsPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final screenWidth = MediaQuery.of(context).size.width;
+
+    // Responsive padding calculation
+    final horizontalPadding = screenWidth > 1400
+        ? 120.0
+        : screenWidth > 1000
+        ? 80.0
+        : screenWidth > 800
+        ? 60.0
+        : screenWidth > 600
+        ? 40.0
+        : 24.0;
+
     return SingleChildScrollView(
-      padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 100),
+      padding: EdgeInsets.symmetric(
+        horizontal: horizontalPadding,
+        vertical: screenWidth > 600 ? 80 : 40,
+      ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -125,26 +146,102 @@ class ProjectsPage extends StatelessWidget {
             subtitle:
                 'A collection of my work across different domains and technologies',
           ),
-          const SizedBox(height: 60),
-          GridView.builder(
-            shrinkWrap: true,
-            physics: const NeverScrollableScrollPhysics(),
-            gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-              crossAxisCount: MediaQuery.of(context).size.width > 1000
+          const SizedBox(height: 40),
+
+          // Project Filter Chips
+          _buildProjectFilterChips(context),
+          const SizedBox(height: 24),
+
+          // Projects Grid
+          LayoutBuilder(
+            builder: (context, constraints) {
+              final crossAxisCount = constraints.maxWidth > 1200
                   ? 3
-                  : MediaQuery.of(context).size.width > 600
+                  : constraints.maxWidth > 800
                   ? 2
-                  : 1,
-              crossAxisSpacing: 24,
-              mainAxisSpacing: 24,
-              childAspectRatio: 0.9,
-            ),
-            itemCount: projects.length,
-            itemBuilder: (context, index) =>
-                ProjectCard(project: projects[index]),
+                  : 1;
+
+              final childAspectRatio = constraints.maxWidth > 1200
+                  ? 0.85
+                  : constraints.maxWidth > 800
+                  ? 0.9
+                  : 1.0;
+
+              return GridView.builder(
+                shrinkWrap: true,
+                physics: const NeverScrollableScrollPhysics(),
+                gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                  crossAxisCount: crossAxisCount,
+                  crossAxisSpacing: 24,
+                  mainAxisSpacing: 24,
+                  childAspectRatio: childAspectRatio,
+                ),
+                itemCount: projects.length,
+                itemBuilder: (context, index) => ProjectCard(
+                  project: projects[index],
+                  isWideScreen: constraints.maxWidth > 800,
+                ),
+              );
+            },
           ),
+          const SizedBox(height: 60),
         ],
       ),
+    );
+  }
+
+  Widget _buildProjectFilterChips(BuildContext context) {
+    final screenWidth = MediaQuery.of(context).size.width;
+    final isWideScreen = screenWidth > 800;
+
+    final filters = [
+      'All',
+      'Flutter',
+      'Web',
+      'Mobile',
+      'Database',
+      'Analytics',
+    ];
+    String selectedFilter = 'All';
+
+    return StatefulBuilder(
+      builder: (context, setState) {
+        return SizedBox(
+          height: isWideScreen ? 50 : 40,
+          child: ListView.separated(
+            scrollDirection: Axis.horizontal,
+            itemCount: filters.length,
+            separatorBuilder: (_, __) => const SizedBox(width: 12),
+            itemBuilder: (context, index) {
+              final filter = filters[index];
+              final isSelected = filter == selectedFilter;
+
+              return FilterChip(
+                label: Text(
+                  filter,
+                  style: TextStyles.chip.copyWith(
+                    color: isSelected ? Colors.white : AppColors.accent,
+                    fontSize: isWideScreen ? 14 : 12,
+                  ),
+                ),
+                selected: isSelected,
+                backgroundColor: Colors.transparent,
+                selectedColor: AppColors.accent,
+                shape: StadiumBorder(
+                  side: BorderSide(
+                    color: AppColors.accent.withOpacity(0.3),
+                    width: 1,
+                  ),
+                ),
+                onSelected: (selected) {
+                  setState(() => selectedFilter = filter);
+                  // Add your filtering logic here
+                },
+              );
+            },
+          ),
+        );
+      },
     );
   }
 }

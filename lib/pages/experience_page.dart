@@ -53,11 +53,26 @@ class ExperiencePage extends StatelessWidget {
       logo: 'litecloud_logo.png',
     ),
   ];
-
   @override
   Widget build(BuildContext context) {
+    final screenWidth = MediaQuery.of(context).size.width;
+
+    // Responsive padding calculation
+    final horizontalPadding = screenWidth > 1400
+        ? 120.0
+        : screenWidth > 1000
+        ? 80.0
+        : screenWidth > 800
+        ? 60.0
+        : screenWidth > 600
+        ? 40.0
+        : 24.0;
+
     return SingleChildScrollView(
-      padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 100),
+      padding: EdgeInsets.symmetric(
+        horizontal: horizontalPadding,
+        vertical: screenWidth > 600 ? 100 : 60,
+      ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -66,15 +81,23 @@ class ExperiencePage extends StatelessWidget {
             subtitle: 'My journey through different companies and roles',
           ),
           const SizedBox(height: 60),
-          ListView.separated(
-            shrinkWrap: true,
-            physics: const NeverScrollableScrollPhysics(),
-            itemCount: experiences.length,
-            separatorBuilder: (context, index) => const SizedBox(height: 40),
-            itemBuilder: (context, index) => ExperienceCard(
-              experience: experiences[index],
-              isLast: index == experiences.length - 1,
-            ),
+          LayoutBuilder(
+            builder: (context, constraints) {
+              final isWideLayout = constraints.maxWidth > 800;
+
+              return ListView.separated(
+                shrinkWrap: true,
+                physics: const NeverScrollableScrollPhysics(),
+                itemCount: experiences.length,
+                separatorBuilder: (context, index) =>
+                    SizedBox(height: isWideLayout ? 60 : 40),
+                itemBuilder: (context, index) => ExperienceCard(
+                  experience: experiences[index],
+                  isLast: index == experiences.length - 1,
+                  isWideScreen: isWideLayout,
+                ),
+              );
+            },
           ),
         ],
       ),

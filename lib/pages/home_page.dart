@@ -3,11 +3,11 @@
 import 'package:flutter/material.dart';
 import 'package:portfolio/models/featured_project.dart';
 import 'package:portfolio/models/professional_milestone.dart';
-import 'package:portfolio/pages/experience_page.dart';
-import 'package:portfolio/pages/projects_page.dart';
-import 'package:portfolio/pages/education_page.dart';
 import 'package:portfolio/constants/colors.dart';
 import 'package:portfolio/constants/text_styles.dart';
+import 'package:portfolio/pages/education_page.dart';
+import 'package:portfolio/pages/experience_page.dart';
+import 'package:portfolio/pages/projects_page.dart';
 import 'package:portfolio/widgets/glass_card.dart';
 import 'package:url_launcher/url_launcher.dart';
 
@@ -23,6 +23,19 @@ class _HomePageState extends State<HomePage> {
 
   @override
   Widget build(BuildContext context) {
+    final screenWidth = MediaQuery.of(context).size.width;
+
+    // Responsive padding calculation
+    final horizontalPadding = screenWidth > 1400
+        ? 120.0
+        : screenWidth > 1000
+        ? 80.0
+        : screenWidth > 800
+        ? 60.0
+        : screenWidth > 600
+        ? 40.0
+        : 24.0;
+
     return Scaffold(
       extendBodyBehindAppBar: true,
       appBar: AppBar(
@@ -56,11 +69,11 @@ class _HomePageState extends State<HomePage> {
             // Content
             IndexedStack(
               index: _currentIndex,
-              children: const [
-                _HomeContent(),
-                ProjectsPage(),
-                ExperiencePage(),
-                EducationPage(),
+              children: [
+                _HomeContent(horizontalPadding: horizontalPadding),
+                const ProjectsPage(),
+                const ExperiencePage(),
+                const EducationPage(),
               ],
             ),
           ],
@@ -130,7 +143,9 @@ class _HomePageState extends State<HomePage> {
 }
 
 class _HomeContent extends StatelessWidget {
-  const _HomeContent();
+  final double horizontalPadding;
+
+  const _HomeContent({required this.horizontalPadding});
 
   final List<FeaturedProject> featuredProjects = const [
     FeaturedProject(
@@ -178,12 +193,19 @@ class _HomeContent extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final isWideScreen = MediaQuery.of(context).size.width > 800;
+    final screenWidth = MediaQuery.of(context).size.width;
+    final isWideScreen = screenWidth > 800;
+    final isVeryWideScreen = screenWidth > 1200;
+
     return SingleChildScrollView(
-      padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 100),
+      padding: EdgeInsets.symmetric(
+        horizontal: horizontalPadding,
+        vertical: screenWidth > 600 ? 100 : 60,
+      ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
+          // Hero Section
           Row(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
@@ -195,21 +217,26 @@ class _HomeContent extends StatelessWidget {
                       'Hello, I\'m',
                       style: TextStyles.heading2.copyWith(
                         color: AppColors.accent,
+                        fontSize: isWideScreen ? null : 20,
                       ),
                     ),
                     const SizedBox(height: 8),
                     Text(
                       'Ruel Ybañez',
                       style: TextStyles.heading1.copyWith(
-                        fontSize: isWideScreen ? 72 : 48,
+                        fontSize: isVeryWideScreen
+                            ? 72
+                            : isWideScreen
+                            ? 56
+                            : 40,
                       ),
                     ),
                     const SizedBox(height: 16),
                     Text(
-                      'Web & Web Developer',
+                      'Web & Mobile Developer', // Fixed typo from "Web & Web Developer"
                       style: TextStyles.heading3.copyWith(
                         color: Colors.white.withOpacity(0.8),
-                        fontSize: isWideScreen ? 32 : 24,
+                        fontSize: isWideScreen ? 32 : 20,
                       ),
                     ),
                     const SizedBox(height: 24),
@@ -244,12 +271,12 @@ class _HomeContent extends StatelessWidget {
                   ],
                 ),
               ),
-              if (isWideScreen) // Only show picture on wider screens
+              if (isWideScreen)
                 Padding(
-                  padding: const EdgeInsets.only(left: 80),
+                  padding: EdgeInsets.only(left: isVeryWideScreen ? 120 : 60),
                   child: GlassCard(
-                    width: 300,
-                    height: 300,
+                    width: isVeryWideScreen ? 350 : 300,
+                    height: isVeryWideScreen ? 350 : 300,
                     child: ClipRRect(
                       borderRadius: BorderRadius.circular(16),
                       child: Image.asset(
@@ -263,41 +290,62 @@ class _HomeContent extends StatelessWidget {
           ),
           const SizedBox(height: 80),
 
+          // Featured Projects Section
           Text('Featured Projects', style: TextStyles.sectionTitle),
           const SizedBox(height: 12),
           Text(
             'Selected projects that showcase my technical capabilities',
-            style: TextStyles.sectionSubtitle,
+            style: TextStyles.sectionSubtitle.copyWith(
+              fontSize: isWideScreen ? null : 14,
+            ),
           ),
           const SizedBox(height: 40),
           GridView.builder(
             shrinkWrap: true,
             physics: const NeverScrollableScrollPhysics(),
             gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-              crossAxisCount: MediaQuery.of(context).size.width > 800 ? 2 : 1,
+              crossAxisCount: isVeryWideScreen
+                  ? 3
+                  : isWideScreen
+                  ? 2
+                  : 1,
               crossAxisSpacing: 24,
               mainAxisSpacing: 24,
-              childAspectRatio: 1.5,
+              childAspectRatio: isVeryWideScreen
+                  ? 1.3
+                  : isWideScreen
+                  ? 1.5
+                  : 1.2,
             ),
             itemCount: featuredProjects.length,
-            itemBuilder: (context, index) =>
-                _buildProjectCard(featuredProjects[index]),
+            itemBuilder: (context, index) => _buildProjectCard(
+              featuredProjects[index],
+              screenWidth: screenWidth,
+            ),
           ),
           const SizedBox(height: 80),
 
+          // Professional Journey Section
           Text('Professional Journey', style: TextStyles.sectionTitle),
           const SizedBox(height: 12),
           Text(
             'Key milestones in my career development',
-            style: TextStyles.sectionSubtitle,
+            style: TextStyles.sectionSubtitle.copyWith(
+              fontSize: isWideScreen ? null : 14,
+            ),
           ),
           const SizedBox(height: 40),
           Column(
             children: [
               for (int i = 0; i < milestones.length; i++)
-                _buildMilestoneCard(milestones[i], i == milestones.length - 1),
+                _buildMilestoneCard(
+                  milestones[i],
+                  i == milestones.length - 1,
+                  screenWidth: screenWidth,
+                ),
             ],
           ),
+          const SizedBox(height: 60),
         ],
       ),
     );
@@ -329,7 +377,13 @@ class _HomeContent extends StatelessWidget {
     );
   }
 
-  Widget _buildProjectCard(FeaturedProject project) {
+  Widget _buildProjectCard(
+    FeaturedProject project, {
+    required double screenWidth,
+  }) {
+    final isWideScreen = screenWidth > 800;
+    final isVeryWideScreen = screenWidth > 1200;
+
     return GestureDetector(
       onTap: () {
         if (project.webLink != null) {
@@ -338,7 +392,13 @@ class _HomeContent extends StatelessWidget {
       },
       child: GlassCard(
         child: Padding(
-          padding: const EdgeInsets.all(24),
+          padding: EdgeInsets.all(
+            isVeryWideScreen
+                ? 28
+                : isWideScreen
+                ? 24
+                : 20,
+          ),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
@@ -346,8 +406,16 @@ class _HomeContent extends StatelessWidget {
                 children: [
                   // Client Logo
                   Container(
-                    width: 40,
-                    height: 40,
+                    width: isVeryWideScreen
+                        ? 48
+                        : isWideScreen
+                        ? 40
+                        : 36,
+                    height: isVeryWideScreen
+                        ? 48
+                        : isWideScreen
+                        ? 40
+                        : 36,
                     decoration: BoxDecoration(
                       borderRadius: BorderRadius.circular(8),
                       color: Colors.white,
@@ -355,11 +423,19 @@ class _HomeContent extends StatelessWidget {
                     padding: const EdgeInsets.all(4),
                     child: Image.asset(project.clientLogo),
                   ),
-                  const SizedBox(width: 12),
+                  SizedBox(width: isVeryWideScreen ? 16 : 12),
                   // App Logo
                   Container(
-                    width: 50,
-                    height: 50,
+                    width: isVeryWideScreen
+                        ? 60
+                        : isWideScreen
+                        ? 50
+                        : 44,
+                    height: isVeryWideScreen
+                        ? 60
+                        : isWideScreen
+                        ? 50
+                        : 44,
                     decoration: BoxDecoration(
                       borderRadius: BorderRadius.circular(12),
                       border: Border.all(
@@ -370,12 +446,27 @@ class _HomeContent extends StatelessWidget {
                   ),
                 ],
               ),
-              const SizedBox(height: 20),
-              Text(project.title, style: TextStyles.cardTitle),
+              SizedBox(height: isVeryWideScreen ? 24 : 20),
+              Text(
+                project.title,
+                style: TextStyles.cardTitle.copyWith(
+                  fontSize: isVeryWideScreen
+                      ? 24
+                      : isWideScreen
+                      ? 22
+                      : 20,
+                ),
+              ),
               const SizedBox(height: 8),
               Text(
                 project.description,
-                style: TextStyles.body.copyWith(fontSize: 14),
+                style: TextStyles.body.copyWith(
+                  fontSize: isVeryWideScreen
+                      ? 16
+                      : isWideScreen
+                      ? 14
+                      : 13,
+                ),
               ),
               const Spacer(),
               // Store badges row
@@ -393,7 +484,11 @@ class _HomeContent extends StatelessWidget {
                           onTap: () =>
                               launchUrl(Uri.parse(project.playStoreLink!)),
                           child: Container(
-                            height: 40,
+                            height: isVeryWideScreen
+                                ? 44
+                                : isWideScreen
+                                ? 40
+                                : 36,
                             decoration: BoxDecoration(
                               borderRadius: BorderRadius.circular(8),
                               color: Colors.black.withOpacity(0.2),
@@ -401,7 +496,11 @@ class _HomeContent extends StatelessWidget {
                             padding: const EdgeInsets.symmetric(horizontal: 12),
                             child: Image.asset(
                               'assets/images/play_store.png',
-                              height: 30,
+                              height: isVeryWideScreen
+                                  ? 34
+                                  : isWideScreen
+                                  ? 30
+                                  : 26,
                             ),
                           ),
                         ),
@@ -410,7 +509,11 @@ class _HomeContent extends StatelessWidget {
                           onTap: () =>
                               launchUrl(Uri.parse(project.appStoreLink!)),
                           child: Container(
-                            height: 40,
+                            height: isVeryWideScreen
+                                ? 44
+                                : isWideScreen
+                                ? 40
+                                : 36,
                             decoration: BoxDecoration(
                               borderRadius: BorderRadius.circular(8),
                               color: Colors.black.withOpacity(0.2),
@@ -418,7 +521,11 @@ class _HomeContent extends StatelessWidget {
                             padding: const EdgeInsets.symmetric(horizontal: 12),
                             child: Image.asset(
                               'assets/images/app_store.png',
-                              height: 30,
+                              height: isVeryWideScreen
+                                  ? 34
+                                  : isWideScreen
+                                  ? 30
+                                  : 26,
                             ),
                           ),
                         ),
@@ -426,7 +533,11 @@ class _HomeContent extends StatelessWidget {
                         GestureDetector(
                           onTap: () => launchUrl(Uri.parse(project.webLink!)),
                           child: Container(
-                            height: 40,
+                            height: isVeryWideScreen
+                                ? 44
+                                : isWideScreen
+                                ? 40
+                                : 36,
                             decoration: BoxDecoration(
                               borderRadius: BorderRadius.circular(8),
                               color: Colors.black.withOpacity(0.2),
@@ -435,17 +546,26 @@ class _HomeContent extends StatelessWidget {
                             child: Row(
                               mainAxisSize: MainAxisSize.min,
                               children: [
-                                const Icon(
+                                Icon(
                                   Icons.public,
                                   color: Colors.white,
-                                  size: 20,
+                                  size: isVeryWideScreen
+                                      ? 22
+                                      : isWideScreen
+                                      ? 20
+                                      : 18,
                                 ),
-                                const SizedBox(width: 6),
+                                SizedBox(width: isVeryWideScreen ? 8 : 6),
                                 Text(
                                   'Visit Website',
                                   style: TextStyles.chip.copyWith(
                                     color: Colors.white,
                                     fontWeight: FontWeight.w500,
+                                    fontSize: isVeryWideScreen
+                                        ? 14
+                                        : isWideScreen
+                                        ? 13
+                                        : 12,
                                   ),
                                 ),
                               ],
@@ -477,15 +597,28 @@ class _HomeContent extends StatelessWidget {
                             width: 1,
                           ),
                         ),
-                        padding: const EdgeInsets.symmetric(
-                          horizontal: 12,
-                          vertical: 6,
+                        padding: EdgeInsets.symmetric(
+                          horizontal: isVeryWideScreen
+                              ? 14
+                              : isWideScreen
+                              ? 12
+                              : 10,
+                          vertical: isVeryWideScreen
+                              ? 8
+                              : isWideScreen
+                              ? 6
+                              : 5,
                         ),
                         child: Text(
                           tech,
                           style: TextStyles.chip.copyWith(
                             color: AppColors.accent,
                             fontWeight: FontWeight.w500,
+                            fontSize: isVeryWideScreen
+                                ? 14
+                                : isWideScreen
+                                ? 13
+                                : 12,
                           ),
                         ),
                       ),
@@ -499,121 +632,141 @@ class _HomeContent extends StatelessWidget {
     );
   }
 
-  Widget _buildMilestoneCard(ProfessionalMilestone milestone, bool isLast) {
-    return LayoutBuilder(
-      builder: (context, constraints) {
-        final isMobile = constraints.maxWidth < 600;
+  Widget _buildMilestoneCard(
+    ProfessionalMilestone milestone,
+    bool isLast, {
+    required double screenWidth,
+  }) {
+    final isWideScreen = screenWidth > 800;
+    final isVeryWideScreen = screenWidth > 1200;
 
-        return Container(
-          margin: EdgeInsets.only(bottom: isMobile ? 16 : 24),
-          child: Row(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              // Year and timeline - always visible
-              SizedBox(
-                width: isMobile ? 60 : 80,
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  children: [
-                    Text(
-                      milestone.year,
-                      style: TextStyles.cardSubtitle.copyWith(
-                        fontSize: isMobile ? 12 : 14,
-                      ),
-                      textAlign: TextAlign.center,
-                    ),
-                    const SizedBox(height: 8),
-                    Container(
-                      width: 2,
-                      height: isLast ? 20 : (isMobile ? 40 : 60),
-                      color: AppColors.accent.withOpacity(0.3),
-                    ),
-                  ],
+    return Container(
+      margin: EdgeInsets.only(bottom: isWideScreen ? 24 : 16),
+      child: Row(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          // Year and timeline
+          SizedBox(
+            width: isVeryWideScreen
+                ? 100
+                : isWideScreen
+                ? 80
+                : 60,
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                Text(
+                  milestone.year,
+                  style: TextStyles.cardSubtitle.copyWith(
+                    fontSize: isVeryWideScreen
+                        ? 16
+                        : isWideScreen
+                        ? 14
+                        : 12,
+                  ),
+                  textAlign: TextAlign.center,
                 ),
-              ),
-              const SizedBox(width: 12),
-              // Content card - responsive layout
-              Expanded(
-                child: GlassCard(
-                  child: Padding(
-                    padding: EdgeInsets.all(isMobile ? 12 : 16),
-                    child: isMobile
-                        ? Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Row(
-                                children: [
-                                  // Company Logo - smaller on mobile
-                                  Container(
-                                    width: 40,
-                                    height: 40,
-                                    padding: const EdgeInsets.all(4),
-                                    decoration: BoxDecoration(
-                                      borderRadius: BorderRadius.circular(8),
-                                      color: Colors.white.withOpacity(0.1),
-                                    ),
-                                    child: Image.asset(milestone.logo),
+                const SizedBox(height: 8),
+                Container(
+                  width: 2,
+                  height: isLast
+                      ? 20
+                      : (isVeryWideScreen
+                            ? 80
+                            : isWideScreen
+                            ? 60
+                            : 40),
+                  color: AppColors.accent.withOpacity(0.3),
+                ),
+              ],
+            ),
+          ),
+          const SizedBox(width: 12),
+          // Content card
+          Expanded(
+            child: GlassCard(
+              child: Padding(
+                padding: EdgeInsets.all(
+                  isVeryWideScreen
+                      ? 24
+                      : isWideScreen
+                      ? 16
+                      : 12,
+                ),
+                child: isWideScreen
+                    ? Row(
+                        children: [
+                          // Company Logo
+                          Container(
+                            width: isVeryWideScreen ? 80 : 60,
+                            height: isVeryWideScreen ? 80 : 60,
+                            padding: const EdgeInsets.all(8),
+                            decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(8),
+                              color: Colors.white.withOpacity(0.1),
+                            ),
+                            child: Image.asset(milestone.logo),
+                          ),
+                          SizedBox(width: isVeryWideScreen ? 24 : 16),
+                          // Details
+                          Expanded(
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text(
+                                  milestone.title,
+                                  style: TextStyles.cardTitle.copyWith(
+                                    fontSize: isVeryWideScreen ? 24 : 20,
                                   ),
-                                  const SizedBox(width: 12),
-                                  Expanded(
-                                    child: Column(
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.start,
-                                      children: [
-                                        Text(
-                                          milestone.title,
-                                          style: TextStyles.cardTitle.copyWith(
-                                            fontSize: 16,
-                                          ),
-                                        ),
-                                        Text(
-                                          milestone.company,
-                                          style: TextStyles.cardSubtitle
-                                              .copyWith(fontSize: 12),
-                                        ),
-                                      ],
-                                    ),
+                                ),
+                                Text(
+                                  milestone.company,
+                                  style: TextStyles.cardSubtitle.copyWith(
+                                    fontSize: isVeryWideScreen ? 18 : 16,
                                   ),
-                                ],
-                              ),
-                              const SizedBox(height: 12),
-                              Text(
-                                milestone.description,
-                                style: TextStyles.body.copyWith(fontSize: 12),
-                              ),
-                            ],
-                          )
-                        : Row(
+                                ),
+                                const SizedBox(height: 8),
+                                Text(
+                                  milestone.description,
+                                  style: TextStyles.body.copyWith(
+                                    fontSize: isVeryWideScreen ? 16 : 14,
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                        ],
+                      )
+                    : Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Row(
                             children: [
-                              // Company Logo - regular size
+                              // Company Logo
                               Container(
-                                width: 60,
-                                height: 60,
-                                padding: const EdgeInsets.all(8),
+                                width: 40,
+                                height: 40,
+                                padding: const EdgeInsets.all(4),
                                 decoration: BoxDecoration(
                                   borderRadius: BorderRadius.circular(8),
                                   color: Colors.white.withOpacity(0.1),
                                 ),
                                 child: Image.asset(milestone.logo),
                               ),
-                              const SizedBox(width: 16),
-                              // Details
+                              const SizedBox(width: 12),
                               Expanded(
                                 child: Column(
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
                                     Text(
                                       milestone.title,
-                                      style: TextStyles.cardTitle,
+                                      style: TextStyles.cardTitle.copyWith(
+                                        fontSize: 16,
+                                      ),
                                     ),
                                     Text(
                                       milestone.company,
-                                      style: TextStyles.cardSubtitle,
-                                    ),
-                                    const SizedBox(height: 8),
-                                    Text(
-                                      milestone.description,
-                                      style: TextStyles.body.copyWith(
+                                      style: TextStyles.cardSubtitle.copyWith(
                                         fontSize: 14,
                                       ),
                                     ),
@@ -622,13 +775,18 @@ class _HomeContent extends StatelessWidget {
                               ),
                             ],
                           ),
-                  ),
-                ),
+                          const SizedBox(height: 12),
+                          Text(
+                            milestone.description,
+                            style: TextStyles.body.copyWith(fontSize: 13),
+                          ),
+                        ],
+                      ),
               ),
-            ],
+            ),
           ),
-        );
-      },
+        ],
+      ),
     );
   }
 }
