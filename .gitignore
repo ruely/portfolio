@@ -1,0 +1,15 @@
+node_modules
+dist
+dist-ssr
+*.local
+.DS_Store
+
+# Top-level source images / originals used only by the image scripts.
+# The live site serves everything from public/assets, so this duplicate
+# (and the *-backup / raw originals) is not needed in the deployed repo.
+/assets/
+.vscode/*
+!.vscode/extensions.json
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
