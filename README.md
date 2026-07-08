@@ -10,7 +10,7 @@ iconography from **lucide-react**.
 - Animated hero with portrait, stats, and resume download CTA
 - Featured projects grid with an animated screenshot gallery modal
 - Experience timeline, grouped skills, education & awards, and a contact section
-- Downloadable, merged resume PDF served at `/resume/Ruel-Ybanez-Resume.pdf`
+- Downloadable, modern resume PDF served at `/resume/Ruel-Ybanez-Resume.pdf`
 - Fully responsive (mobile / tablet / desktop) and respects `prefers-reduced-motion`
 
 ## Getting started
@@ -31,34 +31,33 @@ npm run dev        # start the dev server (http://localhost:5173)
 
 ## Resume PDF
 
-The downloadable resume is generated from two source PDFs using
-[`pdf-lib`](https://pdf-lib.js.org/) in [`scripts/build-resume.mjs`](scripts/build-resume.mjs):
+The downloadable resume is Ruel's own résumé — [`scripts/build-resume.mjs`](scripts/build-resume.mjs)
+merges two source PDFs with [`pdf-lib`](https://pdf-lib.js.org/): the clean
+single-page version first, then the detailed three-page version (4 pages total),
+and sets PDF metadata (`title: "Ruel Ybanez Resume"`, `author: "Ruel Ybanez"`).
 
-1. `~/Downloads/RY Resume.pdf` — the clean 1-page version (placed first)
-2. `~/Downloads/RUEL_YBANEZ_resume (2).docx.pdf` — the detailed 3-page version (appended)
+The source PDFs live in the author's `~/Downloads` folder (local only), so the
+merged result is committed to `public/resume/Ruel-Ybanez-Resume.pdf` and served
+at `/resume/Ruel-Ybanez-Resume.pdf`. The hero, navbar, and contact download
+buttons link there with the `download` attribute.
 
-The merged file has PDF metadata set (`title: "Ruel Ybanez Resume"`,
-`author: "Ruel Ybanez"`) and is written to `public/resume/`, so Vite serves it at
-`/resume/Ruel-Ybanez-Resume.pdf`. The hero and contact download buttons link there
-with the `download` attribute.
-
-Regenerate it any time with:
+Regenerate it locally (after updating the source PDFs) with:
 
 ```bash
 npm run build:resume
 ```
 
-> If the source PDFs move, update the `SOURCES` array at the top of
-> `scripts/build-resume.mjs`.
+> CI does **not** run `build:resume` (the source PDFs aren't on the runner) — it
+> ships the committed merged PDF.
 
 ## Project structure
 
 ```
 ├─ public/
 │  ├─ assets/images/        # project screenshots, logos, portrait
-│  └─ resume/               # generated merged resume PDF
+│  └─ resume/               # generated modern resume PDF
 ├─ scripts/
-│  └─ build-resume.mjs      # pdf-lib merge script (npm run build:resume)
+│  └─ build-resume.mjs      # pdf-lib resume generator (npm run build:resume)
 ├─ src/
 │  ├─ components/           # Navbar, Hero, Projects, Experience, Skills, …
 │  ├─ data/portfolio.js     # all site content (single source of truth)
@@ -100,9 +99,8 @@ It does this by setting `VITE_BASE`, which [`vite.config.js`](vite.config.js)
 reads, and all asset/resume paths are built from `import.meta.env.BASE_URL`, so
 they resolve correctly at either location.
 
-> The merged resume PDF is committed under `public/resume/`, so CI does **not**
-> run `build:resume` (the source PDFs live only on your machine). Regenerate it
-> locally with `npm run build:resume` whenever your resume changes, then commit.
+> The deployment workflow runs `npm run build:resume` before `npm run build`, so
+> GitHub Pages always receives the latest generated PDF.
 
 ### First push
 

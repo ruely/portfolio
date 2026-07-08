@@ -44,6 +44,8 @@ jobs:
             echo "base=/${REPO}/" >> "$GITHUB_OUTPUT"
           fi
 
+      # Note: the resume merges local source PDFs, so it is NOT built in CI.
+      # The merged public/resume/Ruel-Ybanez-Resume.pdf is committed and shipped as-is.
       - name: Build
         run: npm run build
         env:
