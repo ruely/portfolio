@@ -76,41 +76,42 @@ All copy — profile, projects, experience, skills, education, awards — lives 
 what the site displays. Add or swap project screenshots in
 `public/assets/images/` and reference them from the `projects` array.
 
-## Deployment (GitHub Pages)
+## Deployment (GitHub Pages — `/docs` folder)
 
-This repo ships a GitHub Actions workflow at
-[`.github/workflows/deploy.yml`](.github/workflows/deploy.yml) that builds the
-site and publishes it to **GitHub Pages** on every push to `main`.
+This site deploys via GitHub Pages **"Deploy from a branch → `/docs`"**. The
+built static site is committed to the [`docs/`](docs/) folder and served as-is.
 
-One-time setup:
-
-1. Create a GitHub repo and push this project to it (see below).
-2. In the repo, go to **Settings → Pages → Build and deployment → Source** and
-   choose **GitHub Actions**.
-3. Push to `main` (or run the workflow manually from the **Actions** tab). When
-   it finishes, your site is live.
-
-The workflow figures out the correct base path automatically:
-
-- Repo named `your-username.github.io` → served at `https://your-username.github.io/`
-- Any other repo (e.g. `portfolio`) → served at `https://your-username.github.io/portfolio/`
-
-It does this by setting `VITE_BASE`, which [`vite.config.js`](vite.config.js)
-reads, and all asset/resume paths are built from `import.meta.env.BASE_URL`, so
-they resolve correctly at either location.
-
-> The deployment workflow runs `npm run build:resume` before `npm run build`, so
-> GitHub Pages always receives the latest generated PDF.
-
-### First push
+Build the site into `docs/`:
 
 ```bash
-git init
-git add .
-git commit -m "Initial commit: portfolio"
-git branch -M main
-git remote add origin https://github.com/<your-username>/<your-repo>.git
-git push -u origin main
+npm run build:docs
+```
+
+This runs Vite with a **relative base** (`VITE_BASE=./`), so the output works at
+any project subpath (e.g. `https://<username>.github.io/portfolio/`) without
+hard-coding the repo name. It also includes a `.nojekyll` file so Pages serves
+Vite's `assets/` folder untouched.
+
+One-time setup on GitHub:
+
+1. Push this project to your repo (replacing the old site — see below).
+2. Go to **Settings → Pages → Build and deployment**, set **Source** to
+   **Deploy from a branch**, **Branch: `main`**, **Folder: `/docs`**, then Save.
+
+Whenever you change the site, re-run `npm run build:docs`, commit the updated
+`docs/`, and push — Pages redeploys automatically.
+
+> The résumé (`public/resume/…`) is copied into `docs/` by the build. Update it
+> with `npm run build:resume` first, then `npm run build:docs`.
+
+### Replace your existing repo
+
+```bash
+git remote add origin https://github.com/<username>/portfolio.git
+# or, if a remote already exists:
+# git remote set-url origin https://github.com/<username>/portfolio.git
+
+git push -u origin main --force   # replaces the old Flutter site
 ```
 
 ## Tech

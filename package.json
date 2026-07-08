@@ -7,6 +7,7 @@
   "scripts": {
     "dev": "vite",
     "build": "vite build",
+    "build:docs": "VITE_BASE=./ vite build --outDir docs --emptyOutDir",
     "preview": "vite preview",
     "build:resume": "node scripts/build-resume.mjs"
   },
