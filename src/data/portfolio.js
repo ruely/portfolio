@@ -98,7 +98,7 @@ export const projectGroups = [
         category: 'Mobile · Fintech',
         featured: true,
         logo: img('luvpark_logo.png'),
-        gallery: [img('LPB1.png'), img('LPB2.png'), img('LPB3.png')],
+        gallery: [img('LPB1.jpg'), img('LPB2.jpg'), img('LPB3.jpg')],
         description:
           'Led development of LuvPark, a real-time parking reservation and monitoring platform that lets drivers find and reserve available parking spots, pay online, and gives city operators a live operational view.',
         highlights: [
