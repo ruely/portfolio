@@ -1,20 +1,41 @@
 import { useEffect, useRef, useState } from 'react'
 import { useReducedMotion } from 'framer-motion'
 
-// 3D ring of project covers. Cards sit on a cylinder (rotateY + translateZ)
-// that turns slowly and continuously; nothing pauses it. Each card's opacity
-// comes from where it lands on screen, so the reel dissolves just inside a
-// margin at both edges of the viewport. Each cover is inset in a white card.
-// Static under reduced motion.
-const GAP = 18
-const SPEED = 3.5 // degrees per second
+// 3D ring of project covers, after the "circular gallery" pattern: cards sit
+// on a cylinder (rotateY + translateZ) that turns slowly and continuously, so
+// each card swings in from one side, faces the viewer, and swings out the
+// other. Only the front half is shown — cards fade out by 80° and are hidden
+// beyond — and the ring's radius is fitted so its widest point stays inside a
+// small margin at the screen edges. Each cover is inset in a white card.
+const GAP = 24
+const SPEED = 4 // degrees per second
 const PERSPECTIVE = 2000 // must match the container's CSS perspective
+const EDGE_PAD = 20 // horizontal padding at the screen edges
+const EDGE_ANGLE = 60 // the card turned this far sits right at the padding line
+const FADE_START = 38 // fully opaque up to this angle from the front
+const FADE_END = 66 // invisible from here on (just past the edge; the back never shows)
 
-// Card width follows the viewport so about seven cards span a desktop screen.
-const cardWidthFor = (w) => Math.round(Math.max(140, Math.min(240, w * 0.135)))
-// Fade margin at the screen edge. Phones get a negative margin so the two
-// neighbours of the centre card stay partly visible instead of vanishing.
-const edgePadFor = (w) => (w < 640 ? -w * 0.25 : Math.max(16, Math.min(48, w * 0.035)))
+// About nine cards across a desktop screen, like the reference strip.
+const cardWidthFor = (w) => Math.round(Math.max(120, Math.min(260, w * 0.13)))
+
+// On-screen reach of a card's outer edge at `deg` from the front.
+const reachAt = (r, cw, deg) => {
+  const a = (deg * Math.PI) / 180
+  const scale = PERSPECTIVE / (PERSPECTIVE + r * (1 - Math.cos(a)))
+  return (r * Math.sin(a) + (cw / 2) * Math.cos(a)) * scale
+}
+// Radius that puts the card at EDGE_ANGLE exactly at `half` (viewport half
+// minus the padding). Beyond that angle cards are off-screen and faded out.
+const fitRadius = (half, cw) => {
+  let lo = 40
+  let hi = 6000
+  for (let i = 0; i < 40; i++) {
+    const mid = (lo + hi) / 2
+    if (reachAt(mid, cw, EDGE_ANGLE) > half) hi = mid
+    else lo = mid
+  }
+  return Math.round(lo)
+}
 
 // Repeat the items so the ring always has `count` cards.
 const cycle = (items, count) => Array.from({ length: count }, (_, i) => items[i % items.length])
@@ -29,10 +50,10 @@ export default function CircularGallery({ items, onSelect }) {
 
   const cw = cardWidthFor(width)
   const ch = Math.round(cw * 0.95)
-  // Wide enough that the visible arc reaches the screen edges; holds as many
-  // cards as fit around it with GAP between them.
-  const radius = Math.max(Math.round(width * 0.9), 260)
-  const n = Math.max(items.length, Math.round((2 * Math.PI * radius) / (cw + GAP)))
+  // Ring fitted to the viewport minus the edge margin; as many cards around it
+  // as fit with GAP between neighbours at the front.
+  const radius = fitRadius(width / 2 - EDGE_PAD, cw)
+  const n = Math.max(6, Math.round((2 * Math.PI * radius) / (cw + GAP)))
   const ringItems = cycle(items, n)
   const step = 360 / n
 
@@ -49,8 +70,6 @@ export default function CircularGallery({ items, onSelect }) {
   useEffect(() => {
     let raf = 0
     let last = 0
-    const limit = width / 2 - edgePadFor(width)
-
     const frame = (t) => {
       const dt = last ? Math.min(t - last, 64) : 16
       last = t
@@ -63,28 +82,19 @@ export default function CircularGallery({ items, onSelect }) {
         const node = cards.current[i]
         if (!node) continue
         const rel = (((i * step + rot) % 360) + 360) % 360
-        const a = (rel > 180 ? rel - 360 : rel) * (Math.PI / 180) // -π..π, 0 = front
-        let opacity = 0
-        if (Math.abs(a) < Math.PI / 2) {
-          // Project the card onto the screen the way the browser will.
-          const scale = PERSPECTIVE / (PERSPECTIVE + radius * (1 - Math.cos(a)))
-          const x = Math.abs(radius * Math.sin(a)) * scale
-          const halfWidth = (cw / 2) * Math.cos(a) * scale
-          const t = (x + halfWidth) / limit // 1 = card's outer edge at the margin
-          // Long, eased fade: full until 45% of the way out, ~0.2 at the margin,
-          // gone a little past it — so a card eases in and out over a couple of
-          // card widths instead of dropping off at the edge.
-          const u = Math.min(1, Math.max(0, (t - 0.45) / 0.75))
-          opacity = 1 - u * u * (3 - 2 * u)
-        }
+        const deg = rel > 180 ? 360 - rel : rel // 0 = facing the viewer, 180 = behind
+        // Eased fade between FADE_START and FADE_END; nothing past FADE_END.
+        const u = Math.min(1, Math.max(0, (deg - FADE_START) / (FADE_END - FADE_START)))
+        const opacity = 1 - u * u * (3 - 2 * u)
         node.style.opacity = opacity.toFixed(3)
-        node.style.pointerEvents = opacity > 0.3 ? 'auto' : 'none'
+        node.style.visibility = opacity > 0.01 ? 'visible' : 'hidden'
+        node.style.pointerEvents = opacity > 0.4 ? 'auto' : 'none'
       }
       raf = requestAnimationFrame(frame)
     }
     raf = requestAnimationFrame(frame)
     return () => cancelAnimationFrame(raf)
-  }, [n, step, radius, cw, width, reduce])
+  }, [n, step, radius, reduce])
 
   return (
     <div
@@ -102,7 +112,7 @@ export default function CircularGallery({ items, onSelect }) {
             type="button"
             onClick={() => onSelect?.(item)}
             aria-label={`Open ${item.name}`}
-            className="absolute left-1/2 top-1/2 overflow-hidden rounded-2xl bg-white p-1.5 shadow-[0_24px_60px_-20px_rgba(0,0,0,0.7)] [backface-visibility:hidden] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent"
+            className="absolute left-1/2 top-1/2 overflow-hidden rounded-2xl bg-white p-1.5 shadow-[0_18px_40px_-18px_rgba(30,20,80,0.45)] [backface-visibility:hidden] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent"
             style={{
               width: cw,
               height: ch,

@@ -9,7 +9,8 @@
     "build": "vite build",
     "build:docs": "VITE_BASE=./ vite build --outDir docs --emptyOutDir",
     "preview": "vite preview",
-    "build:resume": "node scripts/build-resume.mjs"
+    "build:resume": "node scripts/build-resume.mjs",
+    "colors": "node scripts/project-colors.mjs"
   },
   "dependencies": {
     "framer-motion": "^11.3.19",

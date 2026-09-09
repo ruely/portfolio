@@ -9,8 +9,6 @@ export default function Contact() {
       <div className="container-px">
         <Reveal>
           <div className="ring-gradient relative overflow-hidden rounded-3xl border border-line bg-card p-8 sm:p-12">
-            {/* Glow */}
-            <div className="pointer-events-none absolute -top-24 left-1/2 h-64 w-[36rem] -translate-x-1/2 rounded-full bg-accent/15 blur-[100px]" />
 
             <div className="relative grid gap-10 lg:grid-cols-[1.15fr_0.85fr] lg:items-center">
               <div>

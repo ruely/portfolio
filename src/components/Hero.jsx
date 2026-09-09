@@ -1,7 +1,6 @@
 import { motion, useReducedMotion } from 'framer-motion'
 import { Download, ArrowRight } from 'lucide-react'
 import { profile, projects, RESUME_URL } from '../data/portfolio'
-import RainingLetters from './RainingLetters'
 import CircularGallery from './CircularGallery'
 
 const container = {
@@ -32,10 +31,6 @@ export default function Hero() {
       id="home"
       className="relative overflow-hidden bg-hero pb-16 pt-28 sm:pb-20 sm:pt-32 lg:pt-36"
     >
-      {/* Ambient layer: dim letter rain + a violet glow behind the name */}
-      <RainingLetters count={120} />
-      <div className="pointer-events-none absolute -top-48 left-1/2 h-[42rem] w-[70rem] -translate-x-1/2 rounded-full bg-accent/25 blur-[150px]" />
-
       <motion.div
         variants={container}
         initial="hidden"
@@ -45,7 +40,7 @@ export default function Hero() {
         {/* Two big lines on phones, one line from sm up (font scales with the
             viewport so the whole name always fits). */}
         <h1
-          className="mx-auto flex flex-wrap justify-center gap-x-[0.24em] px-4 text-[clamp(2.75rem,14vw,4.5rem)] font-medium uppercase leading-[0.95] tracking-[-0.02em] text-white sm:flex-nowrap sm:text-[min(8.6vw,9.5rem)]"
+          className="mx-auto flex flex-wrap justify-center gap-x-[0.24em] px-4 text-[clamp(2.75rem,14vw,4.5rem)] font-medium uppercase leading-[0.95] tracking-[-0.02em] text-hero-ink sm:flex-nowrap sm:text-[min(8.6vw,9.5rem)]"
           aria-label={profile.name}
         >
           {profile.name.split(' ').map((w) => (
@@ -58,23 +53,23 @@ export default function Hero() {
         </h1>
 
         <div className="container-px">
-        <motion.p variants={rise} className="mt-4 text-lg text-zinc-200 sm:text-xl">
+        <motion.p variants={rise} className="mt-4 text-lg text-hero-ink/80 sm:text-xl">
           {profile.title}
         </motion.p>
 
         <motion.p
           variants={rise}
-          className="mx-auto mt-3 max-w-2xl font-mono text-[11px] uppercase tracking-[0.22em] text-zinc-400 sm:text-xs"
+          className="mx-auto mt-3 max-w-2xl font-mono text-[11px] uppercase tracking-[0.22em] text-hero-ink/60 sm:text-xs"
         >
           {profile.yearsExperience} years · {projects.length} projects shipped ·{' '}
           {profile.location.replace(/ \d+$/, '')}
         </motion.p>
 
         <motion.div variants={rise} className="mt-6 flex flex-wrap justify-center gap-3">
-          <a href={RESUME_URL} download="Ruel-Ybanez-Resume.pdf" className="btn-white">
+          <a href={RESUME_URL} download="Ruel-Ybanez-Resume.pdf" className="btn-ink">
             <Download size={16} /> Download Resume
           </a>
-          <a href="#projects" className="btn-outline">
+          <a href="#projects" className="btn-ink-outline">
             View Work <ArrowRight size={16} />
           </a>
         </motion.div>
@@ -89,7 +84,7 @@ export default function Hero() {
         className="relative mt-10 sm:mt-14"
       >
         <CircularGallery items={reel} onSelect={openProject} />
-        <p className="container-px mt-5 text-center font-mono text-[11px] uppercase tracking-[0.22em] text-zinc-500 sm:text-xs">
+        <p className="container-px mt-5 text-center font-mono text-[11px] uppercase tracking-[0.22em] text-hero-ink/60 sm:text-xs">
           {projects.length} builds · {featuredCount} featured · tap a card to open
         </p>
       </motion.div>

@@ -9,6 +9,8 @@ const BASE = import.meta.env.BASE_URL
 const ASSET_VERSION = 5
 const img = (name) => `${BASE}assets/images/${name}?v=${ASSET_VERSION}`
 
+import projectColors from './projectColors'
+
 // Placeholder used whenever a project has no real screenshot of its own.
 const NO_IMAGE = img('no_image.png')
 
@@ -79,6 +81,10 @@ const project = (p) => ({
   // True only when real screenshots exist. Without them the UI renders a
   // designed placeholder cover instead of the stock "no image" graphic.
   hasScreens: Array.isArray(p.gallery) && p.gallery.length > 0,
+  // Theme colour (from scripts/project-colors.mjs, or set `color` explicitly).
+  color:
+    p.color ??
+    (projectColors[p.id] && projectColors[p.id] !== '#000000' ? projectColors[p.id] : '#7C5CFF'),
   logo: p.logo ?? NO_IMAGE,
   cover: p.cover ?? (p.gallery ? p.gallery[0] : NO_IMAGE),
   gallery: p.gallery ?? [],
@@ -450,6 +456,7 @@ export const projectGroups = [
         name: 'ConstructTrack',
         tagline: 'Construction site monitoring for crews and admins',
         category: 'Mobile · Construction',
+        color: '#F2B233', // hard-hat amber from the logo
         featured: true,
         logo: img('constructtrack_logo.png'),
         gallery: [img('constructtrack1.png'), img('constructtrack2.png')],

@@ -11,7 +11,8 @@ export default {
       colors: {
         // Near-black product-grade dark palette.
         base: '#09090B', // page
-        hero: '#13102A', // flat hero block (deep indigo)
+        hero: '#C4B5FD', // flat lavender hero block
+        'hero-ink': '#15122B', // text on the lavender hero
         surface: '#0E0E11', // nav, modal panel
         card: { DEFAULT: '#131316', hover: '#17171B' }, // cards
         elevated: { DEFAULT: '#1A1A1F', hover: '#212127' }, // chips / tiles on cards

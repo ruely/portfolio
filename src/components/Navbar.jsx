@@ -46,7 +46,7 @@ export default function Navbar() {
             : 'border border-transparent'
         }`}
       >
-        <a href="#home" className="flex items-center gap-2 pl-1 font-semibold text-white">
+        <a href="#home" className={`flex items-center gap-2 pl-1 font-semibold ${scrolled ? 'text-white' : 'text-hero-ink'}`}>
 <span className="grid h-8 w-8 shrink-0 place-items-center overflow-hidden rounded-full bg-elevated ring-1 ring-line">
             <img src={profile.avatar} alt="" className="h-full w-full object-cover" />
           </span>
@@ -59,7 +59,11 @@ export default function Navbar() {
               key={link.href}
               href={link.href}
               className={`relative rounded-full px-3.5 py-1.5 text-sm font-medium transition-colors ${
-                active === link.href ? 'text-white' : 'text-zinc-400 hover:text-white'
+                active === link.href
+                  ? 'text-white'
+                  : scrolled
+                    ? 'text-zinc-400 hover:text-white'
+                    : 'text-hero-ink/70 hover:text-hero-ink'
               }`}
             >
               {active === link.href && (
@@ -78,14 +82,14 @@ export default function Navbar() {
         <a
           href={RESUME_URL}
           download="Ruel-Ybanez-Resume.pdf"
-          className="hidden items-center gap-1.5 rounded-full bg-white px-4 py-1.5 text-sm font-semibold text-base transition-colors hover:bg-zinc-200 md:inline-flex"
+          className={`hidden items-center gap-1.5 rounded-full px-4 py-1.5 text-sm font-semibold transition-colors md:inline-flex ${scrolled ? 'bg-white text-base hover:bg-zinc-200' : 'bg-hero-ink text-white hover:bg-[#2A2452]'}`}
         >
           Resume <ArrowUpRight size={15} />
         </a>
 
         <button
           onClick={() => setOpen((v) => !v)}
-          className="grid h-9 w-9 place-items-center rounded-full border border-line bg-elevated text-white md:hidden"
+          className="grid h-9 w-9 place-items-center rounded-full border border-line bg-surface text-white md:hidden"
           aria-label={open ? 'Close menu' : 'Open menu'}
           aria-expanded={open}
         >
