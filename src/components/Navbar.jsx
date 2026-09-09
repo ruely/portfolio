@@ -1,12 +1,14 @@
 import { useEffect, useState } from 'react'
 import { AnimatePresence, motion } from 'framer-motion'
 import { Menu, X, ArrowUpRight } from 'lucide-react'
-import { navLinks, RESUME_URL } from '../data/portfolio'
+import { navLinks, profile, RESUME_URL } from '../data/portfolio'
+import { tones, sectionTones } from '../theme/tones'
 
 export default function Navbar() {
   const [scrolled, setScrolled] = useState(false)
   const [open, setOpen] = useState(false)
   const [active, setActive] = useState('#home')
+  const pill = tones[sectionTones[active.slice(1)] ?? 'violet'].pill
 
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 16)
@@ -40,13 +42,13 @@ export default function Navbar() {
       <nav
         className={`flex w-full max-w-5xl items-center justify-between rounded-full px-4 py-2.5 transition-all duration-300 sm:px-5 ${
           scrolled
-            ? 'border border-white/[0.08] bg-base/70 backdrop-blur-xl'
+            ? 'border border-line bg-surface shadow-lg shadow-black/40'
             : 'border border-transparent'
         }`}
       >
         <a href="#home" className="flex items-center gap-2 pl-1 font-semibold text-white">
-          <span className="grid h-7 w-7 place-items-center rounded-lg bg-gradient-to-br from-accent to-accent-cyan text-xs font-bold text-white">
-            RY
+<span className="grid h-8 w-8 shrink-0 place-items-center overflow-hidden rounded-full bg-elevated ring-1 ring-line">
+            <img src={profile.avatar} alt="" className="h-full w-full object-cover" />
           </span>
           <span className="hidden sm:inline">Ruel Ybañez</span>
         </a>
@@ -63,7 +65,8 @@ export default function Navbar() {
               {active === link.href && (
                 <motion.span
                   layoutId="nav-active"
-                  className="absolute inset-0 -z-10 rounded-full bg-white/[0.08]"
+                  className="absolute inset-0 -z-10 rounded-full"
+                  style={{ backgroundColor: pill }}
                   transition={{ type: 'spring', stiffness: 360, damping: 30 }}
                 />
               )}
@@ -82,7 +85,7 @@ export default function Navbar() {
 
         <button
           onClick={() => setOpen((v) => !v)}
-          className="grid h-9 w-9 place-items-center rounded-full border border-white/10 bg-white/[0.03] text-white md:hidden"
+          className="grid h-9 w-9 place-items-center rounded-full border border-line bg-elevated text-white md:hidden"
           aria-label={open ? 'Close menu' : 'Open menu'}
           aria-expanded={open}
         >
@@ -97,15 +100,16 @@ export default function Navbar() {
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: -8 }}
             transition={{ duration: 0.22 }}
-            className="absolute inset-x-4 top-[4.5rem] rounded-3xl border border-white/[0.08] bg-base/95 p-3 backdrop-blur-xl md:hidden"
+            className="absolute inset-x-4 top-[4.5rem] rounded-3xl border border-line bg-surface p-3 shadow-2xl shadow-black/60 md:hidden"
           >
             {navLinks.map((link) => (
               <a
                 key={link.href}
                 href={link.href}
                 onClick={() => setOpen(false)}
+                style={active === link.href ? { backgroundColor: pill } : undefined}
                 className={`block rounded-2xl px-4 py-3 text-base font-medium ${
-                  active === link.href ? 'bg-white/[0.06] text-white' : 'text-zinc-300'
+                  active === link.href ? 'text-white' : 'text-zinc-300'
                 }`}
               >
                 {link.label}

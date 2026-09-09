@@ -8,7 +8,7 @@ export default function SectionHeading({ index, eyebrow, title, description, act
       <div className="flex flex-col gap-5 sm:flex-row sm:items-end sm:justify-between">
         <div className="max-w-2xl">
           <span className="eyebrow">
-            {index && <span className="text-accent">{index}</span>}
+            {index && <span style={{ color: 'var(--tone, #7C5CFF)' }}>{index}</span>}
             {eyebrow}
           </span>
           <h2 className="mt-3 text-[clamp(1.85rem,4vw,2.75rem)] font-extrabold leading-[1.05] tracking-tightest">

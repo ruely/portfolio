@@ -10,10 +10,12 @@ export default {
       },
       colors: {
         // Near-black product-grade dark palette.
-        base: '#09090B',
-        surface: '#0E0E11',
-        card: '#131316',
-        line: '#26262B',
+        base: '#09090B', // page
+        hero: '#13102A', // flat hero block (deep indigo)
+        surface: '#0E0E11', // nav, modal panel
+        card: { DEFAULT: '#131316', hover: '#17171B' }, // cards
+        elevated: { DEFAULT: '#1A1A1F', hover: '#212127' }, // chips / tiles on cards
+        line: { DEFAULT: '#26262B', strong: '#383840' }, // hairline borders
         accent: {
           DEFAULT: '#7C5CFF', // violet
           blue: '#4F9DFF',
@@ -35,10 +37,15 @@ export default {
         shimmer: {
           '100%': { transform: 'translateX(100%)' },
         },
+        float: {
+          '0%, 100%': { transform: 'translateY(0)' },
+          '50%': { transform: 'translateY(-10px)' },
+        },
       },
       animation: {
         marquee: 'marquee 34s linear infinite',
         'pulse-dot': 'pulse-dot 2.4s ease-in-out infinite',
+        float: 'float 6s ease-in-out infinite',
       },
     },
   },

@@ -1,13 +1,14 @@
 import { Mail, Phone, MapPin, Download, Github, Gitlab, ArrowUpRight } from 'lucide-react'
 import { profile, socials, RESUME_URL } from '../data/portfolio'
 import Reveal from './Reveal'
+import Section from './Section'
 
 export default function Contact() {
   return (
-    <section id="contact" className="scroll-mt-24 py-20 sm:py-28">
+    <Section id="contact" watermark="HELLO">
       <div className="container-px">
         <Reveal>
-          <div className="ring-gradient relative overflow-hidden rounded-3xl border border-white/[0.08] bg-white/[0.02] p-8 sm:p-12">
+          <div className="ring-gradient relative overflow-hidden rounded-3xl border border-line bg-card p-8 sm:p-12">
             {/* Glow */}
             <div className="pointer-events-none absolute -top-24 left-1/2 h-64 w-[36rem] -translate-x-1/2 rounded-full bg-accent/15 blur-[100px]" />
 
@@ -38,7 +39,7 @@ export default function Contact() {
                     target="_blank"
                     rel="noreferrer"
                     aria-label="GitHub"
-                    className="grid h-10 w-10 place-items-center rounded-xl border border-white/[0.08] bg-white/[0.03] text-zinc-300 transition-colors hover:border-white/20 hover:text-white"
+                    className="grid h-10 w-10 place-items-center rounded-xl border border-line bg-elevated text-zinc-300 transition-colors hover:border-line-strong hover:text-white"
                   >
                     <Github size={17} />
                   </a>
@@ -47,7 +48,7 @@ export default function Contact() {
                     target="_blank"
                     rel="noreferrer"
                     aria-label="GitLab"
-                    className="grid h-10 w-10 place-items-center rounded-xl border border-white/[0.08] bg-white/[0.03] text-zinc-300 transition-colors hover:border-white/20 hover:text-white"
+                    className="grid h-10 w-10 place-items-center rounded-xl border border-line bg-elevated text-zinc-300 transition-colors hover:border-line-strong hover:text-white"
                   >
                     <Gitlab size={17} />
                   </a>
@@ -63,8 +64,8 @@ export default function Contact() {
                 ].map((c) => {
                   const Icon = c.icon
                   const inner = (
-                    <div className="group flex items-center gap-4 rounded-2xl border border-white/[0.06] bg-white/[0.02] p-4 transition-colors hover:border-white/[0.14]">
-                      <span className="grid h-10 w-10 shrink-0 place-items-center rounded-xl border border-white/[0.08] bg-white/[0.03] text-accent">
+                    <div className="group flex items-center gap-4 rounded-2xl border border-line bg-elevated p-4 transition-colors hover:border-line-strong">
+                      <span className="grid h-10 w-10 shrink-0 place-items-center rounded-xl border border-line bg-card" style={{ color: 'var(--tone)' }}>
                         <Icon size={17} />
                       </span>
                       <div className="min-w-0 flex-1">
@@ -94,6 +95,6 @@ export default function Contact() {
           </div>
         </Reveal>
       </div>
-    </section>
+    </Section>
   )
 }

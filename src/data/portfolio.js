@@ -4,7 +4,10 @@
 // Prefix with Vite's base URL so paths work under a subpath (GitHub Pages
 // project sites) as well as at the root. BASE_URL always ends with '/'.
 const BASE = import.meta.env.BASE_URL
-const img = (name) => `${BASE}assets/images/${name}`
+// Bump ASSET_VERSION whenever an image is replaced under the same filename so
+// browsers and GitHub Pages fetch the new file instead of a cached copy.
+const ASSET_VERSION = 5
+const img = (name) => `${BASE}assets/images/${name}?v=${ASSET_VERSION}`
 
 // Placeholder used whenever a project has no real screenshot of its own.
 const NO_IMAGE = img('no_image.png')
@@ -17,8 +20,9 @@ export const profile = {
   phone: '+639617019129',
   email: 'ruel.ybanez18@gmail.com',
   location: 'Bantayan, Cebu, Philippines 6052',
-  photo: `${img('profile.png')}?v=4`, // headshot (favicon + fallback)
-  figure: `${img('hero-figure.png')}?v=3`, // full-body cutout for the hero
+  photo: img('profile.png'), // headshot (favicon + fallback)
+  avatar: img('avatar.png'), // small face crop for the navbar and footer
+  figure: img('hero-figure.png'), // full-body cutout for the hero
   yearsExperience: '7+',
   summary:
     'Results-driven Web and Mobile Developer with over 7 years of experience designing, developing, and maintaining scalable applications across web and mobile platforms. Experienced in building payment systems, automated fare collection systems, parking management solutions, and enterprise systems. Strong background in full-cycle development, system integration, and collaborative team environments.',
@@ -40,18 +44,21 @@ export const stats = [
 export const services = [
   {
     title: 'Web Development',
+    blurb: 'Dashboards, portals and enterprise systems built with React, Laravel and PHP.',
     count: 'React · Laravel · PHP',
     icon: 'Monitor',
     color: 'teal',
   },
   {
     title: 'Mobile Development',
+    blurb: 'Cross-platform Flutter apps for payments, fare collection and field operations.',
     count: 'Flutter · Dart · RN',
     icon: 'Smartphone',
     color: 'yellow',
   },
   {
     title: 'Systems & Integration',
+    blurb: 'Payment gateways, GPS tracking and REST APIs wired together end to end.',
     count: 'APIs · Payments · GPS',
     icon: 'Share2',
     color: 'coral',
@@ -61,12 +68,20 @@ export const services = [
 // Helper to normalize a project: fills cover/gallery defaults with no_image.
 const project = (p) => ({
   coverContain: false,
+  coverPosition: 'center', // 'top' crops tall phone screenshots from the top
+  logoInvert: false, // true for black-on-transparent silhouettes (invisible on dark)
   tech: [],
   highlights: [],
   ...p,
+  // First segment of the category: "Mobile · Fintech" → "Mobile". Drives the
+  // quick filters on the projects reel.
+  platform: (p.category ?? '').split('·')[0].trim() || 'Other',
+  // True only when real screenshots exist. Without them the UI renders a
+  // designed placeholder cover instead of the stock "no image" graphic.
+  hasScreens: Array.isArray(p.gallery) && p.gallery.length > 0,
   logo: p.logo ?? NO_IMAGE,
   cover: p.cover ?? (p.gallery ? p.gallery[0] : NO_IMAGE),
-  gallery: p.gallery ?? [NO_IMAGE],
+  gallery: p.gallery ?? [],
 })
 
 // Every project, grouped by employer. Projects with real screenshots use them;
@@ -109,6 +124,62 @@ export const projectGroups = [
           'On-site regular parking payments',
         ],
         tech: ['Flutter', 'Dart', 'Firebase', 'REST API'],
+      }),
+      project({
+        id: 'luvpark-pos',
+        name: 'LuvPark POS',
+        tagline: 'Parking POS terminal app for on-site collection',
+        category: 'Mobile · Point of Sale',
+        featured: true,
+        logo: img('luvpark_logo.png'),
+        gallery: [img('luvparkpos.png')],
+        coverPosition: 'top',
+        description:
+          'Flutter point-of-sale app that runs on handheld Android POS terminals at LuvPark sites. Attendants check vehicles in, issue and settle parking tickets, print receipts and end-of-day readings on Bluetooth thermal printers, and keep working offline with a local SQLite store that syncs back to the server.',
+        highlights: [
+          'Check-in, exit and penalty ticketing with QR scanning',
+          'Bluetooth ESC/POS receipt printing and X/Y/Z readings',
+          'Offline-first SQLite storage with background sync',
+          'Role-based dashboards for collectors, enforcers and inspectors',
+        ],
+        tech: ['Flutter', 'Dart', 'GetX', 'SQLite', 'Bluetooth ESC/POS', 'REST API'],
+      }),
+      project({
+        id: 'luvpark-web-portal',
+        name: 'LuvPark Web Portal',
+        tagline: 'Parking operations console for POS sites',
+        category: 'Web · Operations',
+        featured: true,
+        logo: img('luvpark_logo.png'),
+        gallery: [img('web-panel.jpg')],
+        description:
+          'Operations console for the LuvPark POS network, rebuilt in React and TypeScript to replace the earlier Flutter Web portal. Managers monitor live occupancy and revenue per branch, manage terminals, partners, rates and in-app ads, and pull sales, ticket and reading reports as exportable PDFs.',
+        highlights: [
+          'Live dashboard: hourly occupancy, revenue and peak-hour insights',
+          'Terminals, partners, rates and ad-placement management',
+          'Sales, X/Z reading and e-journal reports with PDF export',
+          'Executive view across granted regions and branches',
+        ],
+        tech: ['React', 'TypeScript', 'Tailwind CSS', 'TanStack Query', 'Zustand', 'REST API'],
+      }),
+      project({
+        id: 'luvpark-pay-maya',
+        name: 'LuvPark Pay with Maya',
+        tagline: 'Scan-to-pay parking checkout for guests',
+        category: 'Web · Payments',
+        featured: true,
+        logo: img('maya_logo.png'),
+        gallery: [img('pay-maya.png')],
+        coverPosition: 'top',
+        description:
+          'Public web page at luvpark.ph where guests without the app pay for parking before they exit. They enter a plate number or scan the ticket QR printed at the entrance barrier, review the computed fee, pay through Maya checkout, and receive an exit QR plus a PDF invoice and emailed receipt.',
+        highlights: [
+          'Plate lookup or in-browser QR scanning of the entrance ticket',
+          'Fee computation with VAT breakdown shown before checkout',
+          'Maya checkout with the session preserved across the redirect',
+          'Exit QR, PDF invoice and email receipt after payment',
+        ],
+        tech: ['React', 'TypeScript', 'Tailwind CSS', 'Maya Checkout', 'ZXing', 'jsPDF'],
       }),
       project({
         id: 'luvpay',
@@ -156,6 +227,7 @@ export const projectGroups = [
         category: 'Mobile · Logistics',
         logo: img('car.png'),
         logoContain: true,
+        logoInvert: true,
         description:
           'A mobile application that enables service providers (tow-truck drivers) to receive their job assignments from LuvPark, integrated with GPS and dispatch features supporting towing and transport operations.',
         highlights: [
@@ -172,6 +244,7 @@ export const projectGroups = [
         category: 'Mobile · Location',
         logo: img('motor.png'),
         logoContain: true,
+        logoInvert: true,
         description:
           'A Global Positioning System (GPS) application supporting live location tracking for transport and dispatch operations.',
         highlights: ['Live location tracking', 'Supports transport & dispatch'],
@@ -205,7 +278,7 @@ export const projectGroups = [
         category: 'Mobile · Payments',
         featured: true,
         logo: img('zpay_logo.png'),
-        gallery: [img('ZPB2.png'), img('ZPB3.png')],
+        gallery: [img('ZPB1.jpg'), img('ZPB2.jpg'), img('ZPB3.jpg')],
         description:
           'A QR-based payment wallet that lets commuters pay for fares quickly and securely — pay by QR over cash, powering the ZFare fare-collection flow and topped up via the ZLoad app.',
         highlights: [
@@ -373,6 +446,25 @@ export const projectGroups = [
     period: 'Selected',
     items: [
       project({
+        id: 'constructtrack',
+        name: 'ConstructTrack',
+        tagline: 'Construction site monitoring for crews and admins',
+        category: 'Mobile · Construction',
+        featured: true,
+        logo: img('constructtrack_logo.png'),
+        gallery: [img('constructtrack1.png'), img('constructtrack2.png')],
+        coverPosition: 'top',
+        description:
+          'Flutter app for monitoring construction projects across five roles: super admin, admin, engineer, foreman and warehouseman. Crews time in and out with GPS that resolves the project from the site radius, file site reports with geotagged photos, and request materials, while managers follow overall progress, approvals, budgets and warehouse stock from role-specific dashboards. Backed by a PHP and MySQL API with push notifications and an in-app AI assistant.',
+        highlights: [
+          'Role-based dashboards for admins, engineers, foremen and warehouse staff',
+          'GPS attendance that resolves the project from the site radius',
+          'Site reports with geotagged photos, linked task progress and discussion',
+          'Material requests, approvals, low-stock alerts and A4 PDF reports',
+        ],
+        tech: ['Flutter', 'Dart', 'Riverpod', 'Hive', 'Firebase', 'PHP', 'MySQL'],
+      }),
+      project({
         id: 'hsm',
         name: 'Health Services Mgmt',
         tagline: 'Barangay info system with analytics',
@@ -460,29 +552,91 @@ export const experience = [
   },
 ]
 
-export const skillGroups = [
-  {
-    label: 'Frontend',
-    skills: ['React', 'AngularJS', 'HTML/CSS', 'Tailwind', 'Bootstrap', 'jQuery', 'JavaScript'],
-  },
-  {
-    label: 'Mobile',
-    skills: ['Flutter', 'Dart', 'React Native', 'Cordova'],
-  },
-  {
-    label: 'Backend',
-    skills: ['PHP', 'Laravel', 'Node.js', 'Java', 'C#', 'C++', 'Python'],
-  },
-  {
-    label: 'Database & Data',
-    skills: ['MySQL', 'Oracle PL/SQL', 'MS SQL Server', 'JSON', 'XML', 'amCharts'],
-  },
+// Skill logos live in /public/assets/icons (devicon and Simple Icons SVGs).
+// `core` marks the skills shown in the collapsed "All" view of the skills grid;
+// a null icon renders an initials tile instead.
+const ico = (name) => `${BASE}assets/icons/${name}.svg`
+const skill = (name, category, icon, core = false) => ({
+  name,
+  category,
+  core,
+  icon: icon ? ico(icon) : null,
+})
+
+export const skillCategories = [
+  { key: 'languages', label: 'Languages' },
+  { key: 'frontend', label: 'Frontend' },
+  { key: 'mobile', label: 'Mobile' },
+  { key: 'backend', label: 'Backend' },
+  { key: 'databases', label: 'Databases' },
+  { key: 'tools', label: 'Tools' },
 ]
 
-export const tools = [
-  'Android Studio', 'VS Code', 'Eclipse', 'Sublime', 'Notepad++', 'Visual Studio',
-  'Xcode', 'GitHub', 'GitLab', 'Docker', 'XAMPP', 'Firebase', 'Postman', 'Trello',
-  'Jira', 'Figma', 'FileZilla', 'TortoiseSVN', 'OneSignal', 'Canva', 'cPanel',
+export const skills = [
+  // Languages
+  skill('JavaScript', 'languages', 'javascript', true),
+  skill('TypeScript', 'languages', 'typescript', true),
+  skill('PHP', 'languages', 'php', true),
+  skill('Java', 'languages', 'java', true),
+  skill('C#', 'languages', 'csharp', true),
+  skill('C++', 'languages', 'cplusplus', true),
+  skill('Python', 'languages', 'python', true),
+  skill('Dart', 'languages', 'dart', true),
+  // Frontend
+  skill('React', 'frontend', 'react', true),
+  skill('Next.js', 'frontend', 'nextjs', true),
+  skill('AngularJS', 'frontend', 'angularjs'),
+  skill('HTML', 'frontend', 'html5', true),
+  skill('CSS', 'frontend', 'css3', true),
+  skill('Tailwind CSS', 'frontend', 'tailwindcss', true),
+  skill('Bootstrap', 'frontend', 'bootstrap'),
+  skill('jQuery', 'frontend', 'jquery'),
+  skill('Three.js', 'frontend', 'threejs'),
+  skill('amCharts', 'frontend', null),
+  // Mobile
+  skill('Flutter', 'mobile', 'flutter', true),
+  skill('React Native', 'mobile', 'react', true),
+  skill('Cordova', 'mobile', 'cordova'),
+  // Backend
+  skill('Node.js', 'backend', 'nodejs', true),
+  skill('Express.js', 'backend', 'express', true),
+  skill('Laravel', 'backend', 'laravel', true),
+  skill('FastAPI', 'backend', 'fastapi', true),
+  // Databases & data
+  skill('MySQL', 'databases', 'mysql', true),
+  skill('PostgreSQL', 'databases', 'postgresql', true),
+  skill('Oracle PL/SQL', 'databases', 'oracle'),
+  skill('MS SQL Server', 'databases', 'microsoftsqlserver'),
+  skill('MongoDB', 'databases', 'mongodb', true),
+  skill('SQLite', 'databases', 'sqlite'),
+  skill('Supabase', 'databases', 'supabase', true),
+  skill('Firebase', 'databases', 'firebase', true),
+  skill('JSON', 'databases', 'json'),
+  skill('XML', 'databases', 'xml'),
+  // Tools
+  skill('Git', 'tools', 'git', true),
+  skill('GitHub', 'tools', 'github', true),
+  skill('GitLab', 'tools', 'gitlab'),
+  skill('Docker', 'tools', 'docker', true),
+  skill('Postman', 'tools', 'postman', true),
+  skill('Vercel', 'tools', 'vercel', true),
+  skill('Railway', 'tools', 'railway'),
+  skill('Figma', 'tools', 'figma', true),
+  skill('Jira', 'tools', 'jira'),
+  skill('Trello', 'tools', 'trello'),
+  skill('XAMPP', 'tools', 'xampp'),
+  skill('FileZilla', 'tools', 'filezilla'),
+  skill('TortoiseSVN', 'tools', 'subversion'),
+  skill('OneSignal', 'tools', null),
+  skill('cPanel', 'tools', 'cpanel'),
+  skill('Canva', 'tools', 'canva'),
+  skill('VS Code', 'tools', 'vscode'),
+  skill('Visual Studio', 'tools', 'visualstudio'),
+  skill('Android Studio', 'tools', 'androidstudio'),
+  skill('Xcode', 'tools', 'xcode'),
+  skill('Eclipse', 'tools', 'eclipse'),
+  skill('Sublime Text', 'tools', 'sublimetext'),
+  skill('Notepad++', 'tools', 'notepadplusplus'),
 ]
 
 // AI development tools & assistants used in recent work.

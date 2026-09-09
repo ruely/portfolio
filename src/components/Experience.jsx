@@ -1,10 +1,11 @@
 import { experience } from '../data/portfolio'
 import Reveal from './Reveal'
+import Section from './Section'
 import SectionHeading from './SectionHeading'
 
 export default function Experience() {
   return (
-    <section id="experience" className="scroll-mt-24 py-20 sm:py-28">
+    <Section id="experience" watermark="CAREER">
       <div className="container-px">
         <SectionHeading
           index="02 · "
@@ -22,7 +23,7 @@ export default function Experience() {
                     className={`inline-flex items-center gap-1.5 rounded-full border px-2.5 py-1 font-mono text-[11px] ${
                       job.current
                         ? 'border-emerald-400/20 bg-emerald-400/10 text-emerald-300'
-                        : 'border-white/[0.08] bg-white/[0.03] text-zinc-400'
+                        : 'border-line bg-elevated text-zinc-400'
                     }`}
                   >
                     {job.current && <span className="h-1.5 w-1.5 rounded-full bg-emerald-400" />}
@@ -37,7 +38,7 @@ export default function Experience() {
                   <ul className="mt-4 grid gap-2.5 sm:grid-cols-2">
                     {job.points.map((p) => (
                       <li key={p} className="flex gap-2.5 text-sm leading-relaxed text-zinc-400">
-                        <span className="mt-2 h-1 w-1 shrink-0 rounded-full bg-accent" />
+                        <span className="mt-2 h-1 w-1 shrink-0 rounded-full" style={{ backgroundColor: 'var(--tone)' }} />
                         {p}
                       </li>
                     ))}
@@ -48,6 +49,6 @@ export default function Experience() {
           ))}
         </div>
       </div>
-    </section>
+    </Section>
   )
 }

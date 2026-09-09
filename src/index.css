@@ -32,10 +32,10 @@
 
   /* Subtle bordered surface card with hover highlight. */
   .card {
-    @apply rounded-2xl border border-white/[0.08] bg-white/[0.02] transition-colors duration-300;
+    @apply rounded-2xl border border-line bg-card transition-colors duration-300;
   }
   .card-hover {
-    @apply hover:border-white/[0.16] hover:bg-white/[0.04];
+    @apply hover:border-line-strong hover:bg-elevated;
   }
 
   .btn-white {
@@ -43,7 +43,7 @@
   }
 
   .btn-outline {
-    @apply inline-flex items-center gap-2 rounded-full border border-white/15 bg-white/[0.02] px-5 py-2.5 text-sm font-semibold text-zinc-200 transition-all duration-200 hover:border-white/30 hover:bg-white/[0.06] active:scale-[0.98];
+    @apply inline-flex items-center gap-2 rounded-full border border-line bg-card px-5 py-2.5 text-sm font-semibold text-zinc-200 transition-all duration-200 hover:border-line-strong hover:bg-elevated active:scale-[0.98];
   }
 
   .text-gradient {
@@ -56,7 +56,7 @@
 
   /* Chip / pill used for tech tags. */
   .chip {
-    @apply rounded-full border border-white/[0.08] bg-white/[0.03] px-2.5 py-1 font-mono text-[11px] text-zinc-400;
+    @apply rounded-full border border-line bg-elevated px-2.5 py-1 font-mono text-[11px] text-zinc-400;
   }
 }
 
@@ -88,6 +88,19 @@
   .portrait-fade {
     -webkit-mask-image: linear-gradient(to bottom, #000 44%, rgba(0, 0, 0, 0.45) 60%, transparent 78%);
     mask-image: linear-gradient(to bottom, #000 44%, rgba(0, 0, 0, 0.45) 60%, transparent 78%);
+  }
+
+  /* Section-hue controls (the hue comes from --tone set on each <Section>). */
+  .tone-card {
+    border-color: color-mix(in srgb, var(--tone, #7c5cff) 40%, transparent);
+  }
+  .tone-card:hover {
+    border-color: var(--tone, #7c5cff);
+  }
+  .tone-tab {
+    background-color: var(--tone, #7c5cff);
+    border-color: var(--tone, #7c5cff);
+    box-shadow: 0 0 28px -6px var(--tone, #7c5cff);
   }
 
   /* Gradient border trick for highlighted cards. */
