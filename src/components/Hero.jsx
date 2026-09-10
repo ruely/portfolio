@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from 'react'
-import { motion, useReducedMotion, useScroll, useTransform } from 'framer-motion'
+import { motion, useInView, useReducedMotion, useScroll, useTransform } from 'framer-motion'
 import { Download, ArrowRight } from 'lucide-react'
 import { profile, projects, RESUME_URL } from '../data/portfolio'
 import CircularGallery from './CircularGallery'
@@ -9,8 +9,8 @@ const container = {
   show: { transition: { staggerChildren: 0.09, delayChildren: 0.15 } },
 }
 const rise = {
-  hidden: { opacity: 0, y: 24 },
-  show: { opacity: 1, y: 0, transition: { duration: 0.7, ease: [0.22, 1, 0.36, 1] } },
+  hidden: { opacity: 0, y: 44, scale: 0.96 },
+  show: { opacity: 1, y: 0, scale: 1, transition: { duration: 0.8, ease: [0.22, 1, 0.36, 1] } },
 }
 // Each word of the name slides up out of a clipped line.
 const word = {
@@ -42,6 +42,9 @@ export default function Hero() {
     ro.observe(el)
     return () => ro.disconnect()
   }, [])
+  // Widgets animate in when the hero is in view and out when it leaves, so the
+  // entrance replays on every return.
+  const inView = useInView(ref, { amount: 0.2 })
   const { scrollYProgress } = useScroll({ target: ref, offset: ['start start', 'end start'] })
   const layer = (rate) => useTransform(scrollYProgress, (v) => (reduce ? 0 : v * heroH * rate))
   const yName = layer(0.55)
@@ -59,7 +62,7 @@ export default function Hero() {
       <motion.div
         variants={container}
         initial="hidden"
-        animate="show"
+        animate={inView ? 'show' : 'hidden'}
         className="relative text-center"
       >
         {/* Two big lines on phones, one line from sm up (font scales with the
@@ -100,14 +103,26 @@ export default function Hero() {
             View Work <ArrowRight size={16} />
           </a>
         </motion.div>
+
         </motion.div>
       </motion.div>
 
       {/* Project reel */}
+      {/* Carousel: sinks away shrunken when the hero leaves, springs back up when it returns */}
       <motion.div
-        initial={reduce ? { opacity: 0 } : { opacity: 0, y: 40 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.9, delay: 0.7, ease: [0.22, 1, 0.36, 1] }}
+        initial={reduce ? { opacity: 0 } : { opacity: 0, y: 140, scale: 0.78 }}
+        animate={
+          inView
+            ? { opacity: 1, y: 0, scale: 1 }
+            : reduce
+              ? { opacity: 0 }
+              : { opacity: 0, y: 140, scale: 0.78 }
+        }
+        transition={
+          inView
+            ? { type: 'spring', stiffness: 58, damping: 15, delay: 0.35 }
+            : { duration: 0.45, ease: 'easeIn' }
+        }
         className="relative mt-10 sm:mt-14"
       >
         <motion.div style={{ y: yReel }}>

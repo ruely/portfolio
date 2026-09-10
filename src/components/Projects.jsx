@@ -6,6 +6,7 @@ import ProjectModal from './ProjectModal'
 import ProjectReel from './ProjectReel'
 import SectionHeading from './SectionHeading'
 import Section from './Section'
+import Reveal from './Reveal'
 
 // Quick filters for the slider. `platform` is derived from each project's
 // category in the data file ("Mobile · Fintech" → "Mobile").
@@ -89,7 +90,7 @@ export default function Projects() {
         />
 
         {/* Filters */}
-        <div className="mt-8 flex flex-wrap items-center gap-2" role="group" aria-label="Filter projects">
+        <Reveal delay={0.08} className="mt-8 flex flex-wrap items-center gap-2" role="group" aria-label="Filter projects">
           {FILTERS.map((f) => {
             const active = f.key === filter
             return (
@@ -111,13 +112,13 @@ export default function Projects() {
               </button>
             )
           })}
-        </div>
+        </Reveal>
       </div>
 
       {/* Reel — the active project's colour drives the section backdrop */}
-      <div className="container-px mt-10">
+      <Reveal delay={0.12} y={32} className="container-px mt-10">
         <ProjectReel ref={slider} items={ordered} onChange={handleChange} />
-      </div>
+      </Reveal>
 
       <ProjectModal project={selected} onClose={() => setSelected(null)} />
     </Section>

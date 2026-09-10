@@ -1,12 +1,12 @@
 import { profile, navLinks } from '../data/portfolio'
-import { ChatLauncher } from './ChatBot'
+import { ChatDock } from './ChatBot'
 
 export default function Footer() {
   return (
     <footer className="border-t border-line">
       {/* Chat launcher docked on the footer's edge, straddling the border */}
       <div className="relative z-10 -mt-14 flex justify-center">
-        <ChatLauncher />
+        <ChatDock />
       </div>
       <div className="container-px flex flex-col items-center justify-between gap-6 pb-10 pt-6 sm:flex-row">
         <div className="flex items-center gap-2.5">

@@ -1,12 +1,13 @@
 import { useEffect, useRef, useState } from 'react'
-import { AnimatePresence, motion, useReducedMotion } from 'framer-motion'
+import { AnimatePresence, motion, useInView, useReducedMotion } from 'framer-motion'
 import { Send, X } from 'lucide-react'
 import { profile } from '../data/portfolio'
 import { answer, suggestions } from '../lib/assistant'
 
-// Chat assistant. The launcher (ChatLauncher) — the bot icon, gently bobbing,
-// with a speech bubble that cycles greetings in different languages — docks
-// on the footer's top edge; tapping it opens this Messenger-style chat window
+// Chat assistant. The bot (ChatDock) drops into the footer's edge when the
+// page bottom comes into view and lifts away when it leaves — bobbing, with
+// a speech bubble that cycles greetings in different languages. Tapping it
+// opens this Messenger-style chat window
 // docked to the bottom-right corner. The conversation is anchored to the
 // bottom of the window, so the typing dots appear there too. Replies come from src/lib/assistant.js and are
 // only about Ruel; a typing indicator precedes each one.
@@ -17,52 +18,78 @@ const GREETINGS = [
 ]
 const firstName = profile.name.split(' ')[0]
 
-export function ChatLauncher() {
+const ALIVE = { y: [0, -8, 0], rotate: [0, -4, 0, 4, 0], scale: [1, 1.04, 1] }
+const ALIVE_T = { duration: 3.2, repeat: Infinity, ease: 'easeInOut' }
+const openChat = () => window.dispatchEvent(new CustomEvent('open-chat'))
+
+function GreetingBadge() {
   const [i, setI] = useState(0)
-  const reduce = useReducedMotion()
   useEffect(() => {
     const t = setInterval(() => setI((v) => (v + 1 + Math.floor(Math.random() * (GREETINGS.length - 1))) % GREETINGS.length), 2600)
     return () => clearInterval(t)
   }, [])
-
   return (
-    <div className="flex flex-col items-center">
-      <div className="relative">
-        {/* Greeting badge */}
-        <AnimatePresence mode="wait">
-          <motion.span
-            key={i}
-            initial={{ opacity: 0, y: 8, scale: 0.9 }}
-            animate={{ opacity: 1, y: 0, scale: 1 }}
-            exit={{ opacity: 0, y: -8, scale: 0.9 }}
-            transition={{ duration: 0.28 }}
-            className="absolute -top-9 left-1/2 -translate-x-1/2 whitespace-nowrap rounded-full bg-hero px-3 py-1 text-xs font-semibold text-hero-ink shadow-lg"
-          >
-            {GREETINGS[i]}
-            <span className="absolute -bottom-1 left-1/2 h-2.5 w-2.5 -translate-x-1/2 rotate-45 bg-hero" />
-          </motion.span>
-        </AnimatePresence>
+    <AnimatePresence mode="wait">
+      <motion.span
+        key={i}
+        initial={{ opacity: 0, y: 8, scale: 0.9 }}
+        animate={{ opacity: 1, y: 0, scale: 1 }}
+        exit={{ opacity: 0, y: -8, scale: 0.9 }}
+        transition={{ duration: 0.28 }}
+        className="pointer-events-none absolute -top-9 left-1/2 -translate-x-1/2 whitespace-nowrap rounded-full bg-hero px-3 py-1 text-xs font-semibold text-hero-ink shadow-lg"
+      >
+        {GREETINGS[i]}
+        <span className="absolute -bottom-1 left-1/2 h-2.5 w-2.5 -translate-x-1/2 rotate-45 bg-hero" />
+      </motion.span>
+    </AnimatePresence>
+  )
+}
 
-        {/* The bot, alive */}
-        <motion.button
-          type="button"
-          onClick={() => window.dispatchEvent(new CustomEvent('open-chat'))}
-          aria-label={`Chat with ${firstName}'s assistant`}
-          animate={reduce ? {} : { y: [0, -8, 0], rotate: [0, -4, 0, 4, 0], scale: [1, 1.04, 1] }}
-          transition={reduce ? {} : { duration: 3.2, repeat: Infinity, ease: 'easeInOut' }}
-          whileHover={{ scale: 1.08 }}
-          whileTap={{ scale: 0.95 }}
-          className="grid h-28 w-28 place-items-center rounded-full focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent"
-        >
-          <img
-            src={BOT}
-            alt=""
-            className="h-28 w-28 object-contain drop-shadow-[0_18px_30px_rgba(124,92,255,0.45)]"
-            draggable="false"
-          />
-        </motion.button>
-        <span className="absolute bottom-3 left-3 h-4 w-4 rounded-full border-2 border-base bg-emerald-400 animate-pulse-dot" />
-      </div>
+function BotFace({ size }) {
+  return (
+    <motion.button
+      type="button"
+      onClick={openChat}
+      aria-label={`Chat with ${firstName}'s assistant`}
+      animate={ALIVE}
+      transition={ALIVE_T}
+      whileHover={{ scale: 1.08 }}
+      whileTap={{ scale: 0.95 }}
+      className="grid place-items-center rounded-full focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent"
+      style={{ width: size, height: size }}
+    >
+      <img
+        src={BOT}
+        alt=""
+        className="pointer-events-none h-full w-full object-contain drop-shadow-[0_18px_30px_rgba(124,92,255,0.45)]"
+        draggable="false"
+      />
+    </motion.button>
+  )
+}
+
+// The bot docked on the footer's edge. It drops down into place whenever the
+// footer scrolls into view and lifts away again when it leaves, so the
+// entrance replays on every visit to the bottom of the page.
+export function ChatDock({ dot = 'border-base', className = '' }) {
+  const reduce = useReducedMotion()
+  // The wrapper never moves, so what the observer sees is not changed by the
+  // animation itself (otherwise hiding upward would put it back "in view").
+  const ref = useRef(null)
+  const inView = useInView(ref, { amount: 0.5 })
+  const shown = reduce || inView
+  return (
+    <div ref={ref} className={`relative h-28 w-28 ${className}`}>
+    <motion.div
+      initial={false}
+      animate={shown ? { y: 0, opacity: 1, scale: 1 } : { y: -140, opacity: 0, scale: 0.8 }}
+      transition={shown ? { type: 'spring', stiffness: 70, damping: 13 } : { duration: 0.35, ease: 'easeIn' }}
+      className="absolute inset-0"
+    >
+      <GreetingBadge />
+      <BotFace size={112} />
+      <span className={`pointer-events-none absolute bottom-3 left-3 h-4 w-4 rounded-full border-2 ${dot} bg-emerald-400 animate-pulse-dot`} />
+    </motion.div>
     </div>
   )
 }
