@@ -141,7 +141,7 @@ export default function ProjectModal({ project, onClose }) {
             </div>
 
             {/* Details */}
-            <div className="min-h-0 flex-1 overflow-y-auto p-6 sm:p-8 md:min-w-0 md:flex-[1_1_0%]">
+            <div data-lenis-prevent className="min-h-0 flex-1 overflow-y-auto p-6 sm:p-8 md:min-w-0 md:flex-[1_1_0%]">
               <div className="flex items-start justify-between gap-4">
                 <span className="rounded-full border border-line bg-elevated px-3 py-1 font-mono text-[11px] uppercase tracking-wide text-accent">
                   {project.category}

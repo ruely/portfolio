@@ -307,7 +307,7 @@ const ProjectReel = forwardRef(function ProjectReel({ items, onChange }, ref) {
 
       {/* Write-up: fixed height, scrolls when it runs long */}
       <div className="flex min-h-0 min-w-0 flex-1 flex-col px-5 pt-6 md:px-8 md:pt-8">
-        <div ref={scrollArea} className="thin-scroll relative min-h-0 flex-1 overflow-y-auto pb-4" aria-live="polite">
+        <div ref={scrollArea} data-lenis-prevent className="thin-scroll relative min-h-0 flex-1 overflow-y-auto pb-4" aria-live="polite">
           {/* Invisible in-flow copy sizes the stage to the current write-up. */}
           <div aria-hidden="true" className="invisible">
             <WriteUp project={current} num={pad2(displayIndex + 1)} count={count} exiting={false} />
