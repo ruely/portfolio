@@ -1,4 +1,4 @@
-import { forwardRef, useMemo, useRef, useState } from 'react'
+import { forwardRef, useEffect, useMemo, useRef, useState } from 'react'
 import { AnimatePresence, motion, useInView, useReducedMotion } from 'framer-motion'
 import { Sparkles, ChevronDown } from 'lucide-react'
 import { skills, skillCategories, aiTools } from '../data/portfolio'
@@ -71,6 +71,21 @@ export default function Skills() {
   const reduce = useReducedMotion()
   const grid = useRef(null)
   const inView = useInView(grid, { amount: 0.2 })
+  const tabRow = useRef(null)
+
+  // On small screens the tabs scroll sideways; bring the chosen tab to the
+  // centre of the row when it is not comfortably in view. Scrolls the row
+  // only, never the page.
+  const centreTab = (el) => {
+    const row = tabRow.current
+    if (!row || !el || row.scrollWidth <= row.clientWidth) return
+    const left = el.offsetLeft - (row.clientWidth - el.offsetWidth) / 2
+    const visible = el.offsetLeft >= row.scrollLeft + 24 && el.offsetLeft + el.offsetWidth <= row.scrollLeft + row.clientWidth - 24
+    if (!visible) row.scrollTo({ left: Math.max(0, left), behavior: 'smooth' })
+  }
+  useEffect(() => {
+    centreTab(tabRow.current?.querySelector('[aria-selected="true"]'))
+  }, [tab])
   const settled = reduce || inView
   // One scattered pose per skill, fixed for the session.
   const scatter = useMemo(() => Object.fromEntries(skills.map((s) => [s.name, scatterPose()])), [])
@@ -100,7 +115,13 @@ export default function Skills() {
 
         <Reveal>
           {/* Category tabs */}
-          <div className="mt-8 flex flex-wrap gap-2" role="tablist" aria-label="Skill categories">
+          <div
+            ref={tabRow}
+            data-lenis-prevent
+            className="no-scrollbar -mx-5 mt-8 flex gap-2 overflow-x-auto px-5 pb-1 sm:mx-0 sm:flex-wrap sm:overflow-visible sm:px-0"
+            role="tablist"
+            aria-label="Skill categories"
+          >
             {TABS.map((t) => {
               const active = tab === t.key
               return (
@@ -109,8 +130,11 @@ export default function Skills() {
                   type="button"
                   role="tab"
                   aria-selected={active}
-                  onClick={() => setTab(t.key)}
-                  className={`inline-flex items-center gap-1.5 rounded-full border px-4 py-2 text-sm font-semibold transition-all duration-200 ${
+                  onClick={(e) => {
+                    setTab(t.key)
+                    centreTab(e.currentTarget)
+                  }}
+                  className={`inline-flex shrink-0 items-center gap-1.5 rounded-full border px-4 py-2 text-sm font-semibold transition-all duration-200 ${
                     active
                       ? 'tone-tab'
                       : 'border-line bg-card text-zinc-400 hover:border-line-strong hover:text-white'
@@ -125,6 +149,8 @@ export default function Skills() {
                 </button>
               )
             })}
+            {/* Trailing room so the last tabs can scroll to the centre on phones */}
+            <span aria-hidden="true" className="w-[38vw] shrink-0 sm:hidden" />
           </div>
 
           {/* Logo grid */}

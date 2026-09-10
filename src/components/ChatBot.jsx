@@ -171,6 +171,9 @@ export default function ChatBot() {
     <>
       <AnimatePresence>
         {open && (
+          /* Placement wrapper: centred on phones, docked bottom-right from sm up.
+             The animated panel sits inside so its transforms never fight this. */
+          <div className="fixed bottom-4 left-1/2 z-[70] -translate-x-1/2 sm:left-auto sm:right-4 sm:translate-x-0">
           <motion.div
             role="dialog"
             aria-label={`Chat with ${firstName}'s assistant`}
@@ -179,7 +182,7 @@ export default function ChatBot() {
             animate={{ opacity: 1, y: 0, scale: 1 }}
             exit={{ opacity: 0, y: 24, scale: 0.96 }}
             transition={{ duration: 0.25, ease: [0.22, 1, 0.36, 1] }}
-            className="fixed bottom-4 right-4 z-[70] flex h-[min(520px,calc(100vh-2rem))] w-[min(360px,calc(100vw-2rem))] flex-col overflow-hidden rounded-2xl border border-line bg-card shadow-[0_30px_80px_-20px_rgba(0,0,0,0.8)]"
+            className="flex h-[min(520px,calc(100vh-2rem))] w-[min(360px,calc(100vw-2rem))] flex-col overflow-hidden rounded-2xl border border-line bg-card shadow-[0_30px_80px_-20px_rgba(0,0,0,0.8)]"
           >
             {/* Header */}
             <div className="flex items-center gap-3 border-b border-line bg-surface px-4 py-3">
@@ -265,6 +268,7 @@ export default function ChatBot() {
               </button>
             </form>
           </motion.div>
+          </div>
         )}
       </AnimatePresence>
     </>
