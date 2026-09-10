@@ -1,43 +1,47 @@
-import { useRef } from 'react'
+import { createContext, useRef } from 'react'
 import { motion, useReducedMotion, useScroll, useTransform } from 'framer-motion'
 import { tones, sectionTones } from '../theme/tones'
 
-// Page section with its own flat background tint and a parallax backdrop: a
-// huge faint watermark word and a soft glow that move at different speeds
-// from the content as the section scrolls through the viewport. Exposes the
-// section hue as --tone for headings, tabs and cards inside it.
-export default function Section({ id, watermark, bgColor, inkColor, className = '', children }) {
+// Progress of the section through the viewport (0 = entering at the bottom,
+// 1 = gone off the top). Headings subscribe to it for a stronger drift.
+export const SectionScroll = createContext(null)
+
+// Page section with its own flat background colour and a parallax transition:
+// the background scrolls with the page while the content lags a little behind
+// it (and the heading lags more), so each section arrives and leaves with
+// depth. Exposes the section hue as --tone, plus --fg / --fg-muted for text on
+// light sections. A section can hand in its own colours (the projects slider
+// follows the active project).
+export default function Section({ id, bgColor, inkColor, className = '', children }) {
   const ref = useRef(null)
   const reduce = useReducedMotion()
-  const base = tones[sectionTones[id] ?? 'violet']
-  // A section can hand in its own colours (the projects slider follows the active project).
-  const tone = { bg: bgColor ?? base.bg, ink: inkColor ?? base.ink }
+  const base = tones[sectionTones[id] ?? 'black']
+  const tone = { ...base, bg: bgColor ?? base.bg, ink: inkColor ?? base.ink }
 
   const { scrollYProgress } = useScroll({ target: ref, offset: ['start end', 'end start'] })
-  const wordY = useTransform(scrollYProgress, [0, 1], reduce ? [0, 0] : [110, -110])
+  const y = useTransform(scrollYProgress, [0, 1], reduce ? [0, 0] : [-60, 60])
 
   return (
     <section
       ref={ref}
       id={id}
+      data-light={tone.light || undefined}
       className={`relative overflow-hidden scroll-mt-24 py-20 sm:py-28 ${className}`}
       style={{
         backgroundColor: tone.bg,
         '--tone': tone.ink,
+        '--tone-fg': tone.light ? '#ffffff' : '#15122B',
         '--section-bg': tone.bg,
+        '--fg': tone.light ? '#15122B' : '#ffffff',
+        '--fg-muted': tone.light ? '#3F3A5C' : '#a1a1aa',
         transition: 'background-color 700ms ease',
       }}
     >
-      {watermark && (
-        <motion.span
-          aria-hidden="true"
-          style={{ y: wordY, color: tone.ink }}
-          className="pointer-events-none absolute -top-6 right-[-1vw] select-none whitespace-nowrap font-display text-[clamp(6rem,17vw,15rem)] font-extrabold uppercase leading-none tracking-tighter opacity-[0.07]"
-        >
-          {watermark}
-        </motion.span>
-      )}
-      <div className="relative">{children}</div>
+      <SectionScroll.Provider value={scrollYProgress}>
+        <motion.div style={{ y }} className="relative">
+          {children}
+        </motion.div>
+      </SectionScroll.Provider>
     </section>
   )
 }

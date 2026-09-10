@@ -1,22 +1,21 @@
-// One hue per section. `bg` is the flat section background, `ink` the accent
-// used for the heading index, watermark, glow and active controls, `pill` a
-// solid dark tint for the navbar's active link.
+// Two-tone theme: lavender and black. `bg` is the flat section background,
+// `ink` the accent used for heading indexes, bullets, tabs and the navbar
+// pill, `light` flags sections whose text must be dark.
 export const tones = {
-  violet: { bg: '#181235', ink: '#7C5CFF', pill: '#2B2360' },
-  blue: { bg: '#0E1B30', ink: '#4F9DFF', pill: '#1A2B4A' },
-  cyan: { bg: '#0A2327', ink: '#22D3EE', pill: '#123F46' },
-  amber: { bg: '#2A1E0C', ink: '#F5B544', pill: '#3B2D12' },
-  emerald: { bg: '#0D2619', ink: '#34D399', pill: '#163A2A' },
+  black: { bg: '#0B0B0F', ink: '#C4B5FD', pill: '#2B2360', light: false },
+  lavender: { bg: '#C4B5FD', ink: '#15122B', pill: '#15122B', light: true },
+  white: { bg: '#FFFFFF', ink: '#15122B', pill: '#15122B', light: true },
 }
 
-// Section id → tone. Shared by the sections and the navbar.
+// Section id → tone. Sections alternate down the page; the projects slider
+// overrides its background with the active project's colour.
 export const sectionTones = {
-  home: 'violet',
-  projects: 'violet',
-  experience: 'blue',
-  skills: 'cyan',
-  education: 'amber',
-  contact: 'emerald',
+  home: 'lavender',
+  projects: 'black',
+  experience: 'black',
+  skills: 'white',
+  education: 'black',
+  contact: 'lavender',
 }
 
 // Blend two hex colours: t = 0 → a, t = 1 → b.

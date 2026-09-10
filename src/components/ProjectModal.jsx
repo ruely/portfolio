@@ -2,6 +2,7 @@ import { useEffect, useState, useCallback, useRef, useId } from 'react'
 import { AnimatePresence, motion } from 'framer-motion'
 import { X, ChevronLeft, ChevronRight, Check } from 'lucide-react'
 import ProjectCover from './ProjectCover'
+import { lockScroll } from '../lib/smoothScroll'
 
 // Dark gallery modal for a single project.
 export default function ProjectModal({ project, onClose }) {
@@ -39,11 +40,11 @@ export default function ProjectModal({ project, onClose }) {
   useEffect(() => {
     if (!project) return
     const opener = document.activeElement
-    document.body.style.overflow = 'hidden'
+    lockScroll(true)
     const t = setTimeout(() => closeRef.current?.focus(), 30)
     return () => {
       clearTimeout(t)
-      document.body.style.overflow = ''
+      lockScroll(false)
       if (opener instanceof HTMLElement) opener.focus()
     }
   }, [project?.id]) // eslint-disable-line react-hooks/exhaustive-deps
@@ -173,7 +174,7 @@ export default function ProjectModal({ project, onClose }) {
               <ul className="mt-5 space-y-2.5">
                 {project.highlights.map((h) => (
                   <li key={h} className="flex items-start gap-2.5 text-sm text-zinc-300">
-                    <Check size={16} className="mt-0.5 shrink-0 text-accent-cyan" />
+                    <Check size={16} className="mt-0.5 shrink-0 text-accent" />
                     {h}
                   </li>
                 ))}

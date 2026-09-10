@@ -14,7 +14,7 @@ export default function Capabilities() {
             return (
               <Reveal key={s.title} delay={i * 0.08}>
                 <div className="card card-hover group h-full p-6">
-                  <span className="grid h-11 w-11 place-items-center rounded-xl border border-line bg-elevated text-accent transition-colors group-hover:text-accent-cyan">
+                  <span className="grid h-11 w-11 place-items-center rounded-xl border border-line bg-elevated text-accent transition-colors group-hover:text-white">
                     <Icon size={20} />
                   </span>
                   <h3 className="mt-5 text-lg font-semibold text-white">{s.title}</h3>

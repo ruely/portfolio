@@ -8,8 +8,13 @@ import Education from './components/Education'
 import Contact from './components/Contact'
 import Footer from './components/Footer'
 import BackToTop from './components/BackToTop'
+import ChatBot from './components/ChatBot'
+import { useEffect } from 'react'
+import { initSmoothScroll } from './lib/smoothScroll'
 
 export default function App() {
+  useEffect(() => initSmoothScroll(), [])
+
   return (
     <div className="relative min-h-screen overflow-x-clip">
       {/* Fixed decorative background: raining letters + gradient glows */}
@@ -25,6 +30,7 @@ export default function App() {
         <Skills />
         <Education />
         <Contact />
+        <ChatBot />
       </main>
       <Footer />
       <BackToTop />

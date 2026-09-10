@@ -59,7 +59,7 @@
   }
 
   .accent-gradient {
-    @apply bg-gradient-to-r from-accent via-accent-blue to-accent-cyan bg-clip-text text-transparent;
+    @apply bg-gradient-to-r from-accent via-[#E4DEFF] to-white bg-clip-text text-transparent;
   }
 
   /* Chip / pill used for tech tags. */
@@ -117,15 +117,27 @@
 
   /* Section-hue controls (the hue comes from --tone set on each <Section>). */
   .tone-card {
-    border-color: color-mix(in srgb, var(--tone, #7c5cff) 40%, transparent);
+    border-color: color-mix(in srgb, var(--tone, #c4b5fd) 40%, transparent);
   }
   .tone-card:hover {
-    border-color: var(--tone, #7c5cff);
+    border-color: var(--tone, #c4b5fd);
   }
   .tone-tab {
-    background-color: var(--tone, #7c5cff);
-    border-color: var(--tone, #7c5cff);
-    box-shadow: 0 0 28px -6px var(--tone, #7c5cff);
+    background-color: var(--tone, #c4b5fd);
+    border-color: var(--tone, #c4b5fd);
+    color: var(--tone-fg, #15122b);
+    box-shadow: 0 0 28px -6px var(--tone, #c4b5fd);
+  }
+  /* Outline button that reads on both lavender and black sections. */
+  .btn-tone {
+    @apply inline-flex items-center gap-2 rounded-full border px-5 py-2.5 text-sm font-semibold transition-all duration-200 active:scale-[0.98];
+    border-color: color-mix(in srgb, var(--tone, #c4b5fd) 45%, transparent);
+    color: var(--fg, #fff);
+  }
+  .btn-tone:hover {
+    background-color: var(--tone, #c4b5fd);
+    border-color: var(--tone, #c4b5fd);
+    color: var(--tone-fg, #15122b);
   }
 
   /* Gradient border trick for highlighted cards. */
@@ -138,12 +150,48 @@
     inset: 0;
     border-radius: inherit;
     padding: 1px;
-    background: linear-gradient(135deg, rgba(124, 92, 255, 0.6), rgba(34, 211, 238, 0.25), transparent 60%);
+    background: linear-gradient(135deg, rgba(196, 181, 253, 0.7), rgba(196, 181, 253, 0.2), transparent 60%);
     -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
     -webkit-mask-composite: xor;
     mask-composite: exclude;
     pointer-events: none;
   }
+}
+
+/* Projects reel: text rises in sequence; the old block exits as a whole. */
+@keyframes reel-rise {
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+@keyframes reel-exit {
+  from {
+    opacity: 1;
+    transform: translateY(0);
+  }
+  to {
+    opacity: 0;
+    transform: translateY(-12px);
+  }
+}
+.reel-rise,
+.reel-block {
+  opacity: 0;
+  transform: translateY(10px);
+  animation: reel-rise 520ms cubic-bezier(0.22, 1, 0.36, 1) forwards;
+}
+.reel-rise {
+  display: inline-block;
+}
+.reel-exit {
+  animation: reel-exit 240ms ease forwards;
+}
+.reel-exit .reel-rise,
+.reel-exit .reel-block {
+  animation: none;
+  opacity: 1;
+  transform: none;
 }
 
 /* Custom scrollbar. */

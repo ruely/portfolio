@@ -3,12 +3,13 @@ import { AnimatePresence, motion } from 'framer-motion'
 import { Menu, X, ArrowUpRight } from 'lucide-react'
 import { navLinks, profile, RESUME_URL } from '../data/portfolio'
 import { tones, sectionTones } from '../theme/tones'
+import { lockScroll } from '../lib/smoothScroll'
 
 export default function Navbar() {
   const [scrolled, setScrolled] = useState(false)
   const [open, setOpen] = useState(false)
   const [active, setActive] = useState('#home')
-  const pill = tones[sectionTones[active.slice(1)] ?? 'violet'].pill
+  const pill = tones[sectionTones[active.slice(1)] ?? 'black'].pill
 
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 16)
@@ -31,10 +32,8 @@ export default function Navbar() {
   }, [])
 
   useEffect(() => {
-    document.body.style.overflow = open ? 'hidden' : ''
-    return () => {
-      document.body.style.overflow = ''
-    }
+    lockScroll(open)
+    return () => lockScroll(false)
   }, [open])
 
   return (

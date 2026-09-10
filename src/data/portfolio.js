@@ -95,6 +95,7 @@ const project = (p) => ({
 export const projectGroups = [
   {
     company: 'Clever Minds Digital Solutions Inc.',
+    logo: img('cleverminds_logo.png'),
     period: '2022 — Present',
     items: [
       project({
@@ -260,6 +261,7 @@ export const projectGroups = [
   },
   {
     company: 'ZettaSolutions Inc.',
+    logo: img('zettasolutions_logo.png'),
     period: '2019 — 2022',
     items: [
       project({
@@ -401,6 +403,7 @@ export const projectGroups = [
   },
   {
     company: 'Litecloud Corporation',
+    logo: img('litecloud_logo.png'),
     period: '2017 — 2019',
     items: [
       project({
@@ -518,7 +521,12 @@ export const projectGroups = [
 
 // Flat list (used for counts and the modal lookup).
 export const projects = projectGroups.flatMap((g) =>
-  g.items.map((p) => ({ ...p, company: g.company, companyPeriod: g.period })),
+  g.items.map((p) => ({
+    ...p,
+    company: g.company,
+    companyPeriod: g.period,
+    companyLogo: g.logo ?? null,
+  })),
 )
 
 export const experience = [
@@ -644,13 +652,27 @@ export const skills = [
   skill('Eclipse', 'tools', 'eclipse'),
   skill('Sublime Text', 'tools', 'sublimetext'),
   skill('Notepad++', 'tools', 'notepadplusplus'),
+  skill('Photoshop', 'tools', 'photoshop'),
+  skill('Photopea', 'tools', 'photopea'),
+  skill('CapCut', 'tools', null), // no public logo in the icon sets → initials tile
 ]
 
-// AI development tools & assistants used in recent work.
+// AI development tools & assistants used in recent work. Icons live in
+// /public/assets/icons; a null icon renders an initials tile.
+const ai = (name, vendor, icon) => ({ name, vendor, icon: icon ? ico(icon) : null })
 export const aiTools = [
-  { name: 'Claude', vendor: 'Anthropic' },
-  { name: 'Codex', vendor: 'OpenAI' },
-  { name: 'Antigravity', vendor: 'Google' },
+  ai('Claude Code', 'Anthropic', 'anthropic'),
+  ai('Claude', 'Anthropic', 'claude'),
+  ai('ChatGPT', 'OpenAI', 'openai'),
+  ai('Codex', 'OpenAI', 'openai'),
+  ai('Gemini', 'Google', 'googlegemini'),
+  ai('Antigravity', 'Google', 'google'),
+  ai('Stitch', 'Google', 'google'),
+  ai('DeepSeek', 'DeepSeek', 'deepseek'),
+  ai('Hermes', 'Nous Research', null),
+  ai('GitHub Copilot', 'GitHub', 'githubcopilot'),
+  ai('Cursor', 'Anysphere', 'cursor'),
+  ai('Windsurf', 'Codeium', 'windsurf'),
 ]
 
 export const education = [

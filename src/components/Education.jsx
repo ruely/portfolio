@@ -6,7 +6,7 @@ import SectionHeading from './SectionHeading'
 
 export default function Education() {
   return (
-    <Section id="education" watermark="STUDY">
+    <Section id="education">
       <div className="container-px">
         <SectionHeading
           index="04 · "

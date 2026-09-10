@@ -3,7 +3,7 @@ import { ArrowLeft, ArrowRight } from 'lucide-react'
 import { projects } from '../data/portfolio'
 import { mixHex } from '../theme/tones'
 import ProjectModal from './ProjectModal'
-import ProjectSlider from './ProjectSlider'
+import ProjectReel from './ProjectReel'
 import SectionHeading from './SectionHeading'
 import Section from './Section'
 
@@ -68,7 +68,6 @@ export default function Projects() {
   return (
     <Section
       id="projects"
-      watermark="WORK"
       bgColor={activeColor ? mixHex(activeColor, PAGE_DARK, BACKDROP_MIX) : undefined}
       inkColor={activeColor ?? undefined}
     >
@@ -77,7 +76,7 @@ export default function Projects() {
           index="01 · "
           eyebrow="Selected Work"
           title="Projects I've shipped"
-          description="Real products across fintech, transport, healthcare and enterprise — swipe through; each card carries the full story."
+          description="Real products across fintech, transport, healthcare and enterprise — step through the reel; each entry carries the full story."
           action={
             <div className="hidden items-center gap-2 sm:flex">
               <span className="mr-1 font-mono text-xs text-zinc-400">
@@ -115,14 +114,10 @@ export default function Projects() {
         </div>
       </div>
 
-      {/* Slider — full-bleed; the active project's colour drives the backdrop */}
-      <div className="mt-10">
-        <ProjectSlider ref={slider} items={ordered} onChange={handleChange} />
+      {/* Reel — the active project's colour drives the section backdrop */}
+      <div className="container-px mt-10">
+        <ProjectReel ref={slider} items={ordered} onChange={handleChange} />
       </div>
-
-      <p className="container-px mt-6 font-mono text-[11px] uppercase tracking-[0.2em] text-white/50">
-        swipe · drag · arrow keys
-      </p>
 
       <ProjectModal project={selected} onClose={() => setSelected(null)} />
     </Section>

@@ -5,7 +5,7 @@ import SectionHeading from './SectionHeading'
 
 export default function Experience() {
   return (
-    <Section id="experience" watermark="CAREER">
+    <Section id="experience">
       <div className="container-px">
         <SectionHeading
           index="02 · "

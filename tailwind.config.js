@@ -18,7 +18,7 @@ export default {
         elevated: { DEFAULT: '#1A1A1F', hover: '#212127' }, // chips / tiles on cards
         line: { DEFAULT: '#26262B', strong: '#383840' }, // hairline borders
         accent: {
-          DEFAULT: '#7C5CFF', // violet
+          DEFAULT: '#C4B5FD', // lavender
           blue: '#4F9DFF',
           cyan: '#22D3EE',
         },

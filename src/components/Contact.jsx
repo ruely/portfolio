@@ -5,7 +5,7 @@ import Section from './Section'
 
 export default function Contact() {
   return (
-    <Section id="contact" watermark="HELLO">
+    <Section id="contact">
       <div className="container-px">
         <Reveal>
           <div className="ring-gradient relative overflow-hidden rounded-3xl border border-line bg-card p-8 sm:p-12">
@@ -63,7 +63,7 @@ export default function Contact() {
                   const Icon = c.icon
                   const inner = (
                     <div className="group flex items-center gap-4 rounded-2xl border border-line bg-elevated p-4 transition-colors hover:border-line-strong">
-                      <span className="grid h-10 w-10 shrink-0 place-items-center rounded-xl border border-line bg-card" style={{ color: 'var(--tone)' }}>
+                      <span className="grid h-10 w-10 shrink-0 place-items-center rounded-xl border border-line bg-card text-accent">
                         <Icon size={17} />
                       </span>
                       <div className="min-w-0 flex-1">

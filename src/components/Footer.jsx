@@ -1,9 +1,14 @@
 import { profile, navLinks } from '../data/portfolio'
+import { ChatLauncher } from './ChatBot'
 
 export default function Footer() {
   return (
     <footer className="border-t border-line">
-      <div className="container-px flex flex-col items-center justify-between gap-6 py-10 sm:flex-row">
+      {/* Chat launcher docked on the footer's edge, straddling the border */}
+      <div className="relative z-10 -mt-14 flex justify-center">
+        <ChatLauncher />
+      </div>
+      <div className="container-px flex flex-col items-center justify-between gap-6 pb-10 pt-6 sm:flex-row">
         <div className="flex items-center gap-2.5">
 <span className="grid h-9 w-9 shrink-0 place-items-center overflow-hidden rounded-full bg-elevated ring-1 ring-line">
             <img src={profile.avatar} alt="" className="h-full w-full object-cover" />
