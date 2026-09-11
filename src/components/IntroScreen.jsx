@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useRef, useState } from 'react'
-import { AnimatePresence, motion, useReducedMotion } from 'framer-motion'
+import { AnimatePresence, animate, motion, useMotionValue, useReducedMotion, useTransform } from 'framer-motion'
 import { profile, projects } from '../data/portfolio'
 import { lockScroll } from '../lib/smoothScroll'
 import { BotFace, GreetingBadge } from './ChatBot'
@@ -100,6 +100,15 @@ export default function IntroScreen({ onDone }) {
 
   const speeds = useMemo(() => Array.from({ length: 40 }, () => 26 + Math.random() * 22), [])
 
+  // One motion value drives both the bar and the percentage so they agree.
+  const progress = useMotionValue(0)
+  const percent = useTransform(progress, (v) => `${Math.round(v)}%`)
+  const width = useTransform(progress, (v) => `${v}%`)
+  useEffect(() => {
+    const controls = animate(progress, 100, { duration: total / 1000, ease: 'linear' })
+    return () => controls.stop()
+  }, [progress, total])
+
   return (
     <motion.div
       role="dialog"
@@ -178,13 +187,16 @@ export default function IntroScreen({ onDone }) {
         </motion.p>
 
         {/* Progress */}
-        <div className="mt-10 h-1 w-56 overflow-hidden rounded-full bg-elevated">
-          <motion.div
-            initial={{ width: '0%' }}
-            animate={{ width: '100%' }}
-            transition={{ duration: total / 1000, ease: 'linear' }}
-            className="h-full rounded-full bg-hero"
-          />
+        <div className="mt-10 flex w-64 items-center gap-3">
+          <div className="h-1 flex-1 overflow-hidden rounded-full bg-elevated">
+            <motion.div style={{ width }} className="h-full rounded-full bg-hero" />
+          </div>
+          <motion.span
+            aria-live="polite"
+            className="w-11 text-right font-mono text-sm tabular-nums text-white"
+          >
+            {percent}
+          </motion.span>
         </div>
         <motion.p
           initial={{ opacity: 0 }}
