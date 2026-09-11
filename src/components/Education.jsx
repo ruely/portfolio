@@ -47,7 +47,11 @@ export default function Education() {
                 </span>
                 Awards
               </h3>
-              <div className="mt-6 space-y-2.5">
+              {/* Scrolls within the card once the list outgrows it */}
+              <div
+                data-lenis-prevent
+                className="thin-scroll mt-6 max-h-[300px] space-y-2.5 overflow-y-auto overscroll-contain pr-1"
+              >
                 {awards.map((a) => (
                   <div
                     key={a.title}

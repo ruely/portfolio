@@ -701,6 +701,8 @@ export const awards = [
   { title: 'Best in Economics', org: 'San Agustin NHS', year: 'Apr 2016' },
   { title: 'Leadership Award', org: 'San Agustin NHS', year: 'Apr 2016' },
   { title: 'Math Quiz Bowl Champion', org: 'CITE Technical Institute', year: 'Oct 2016' },
+  { title: 'Math Club Chairman', org: 'CITE Technical Institute', year: 'Nov 2016' },
+  { title: 'Palette Club Chairman', org: 'CITE Technical Institute', year: 'Nov 2016' },
   { title: 'Punctuality Award', org: 'CMDS Inc.', year: 'Dec 2023' },
 ]
 
