@@ -9,14 +9,22 @@ import Contact from './components/Contact'
 import Footer from './components/Footer'
 import BackToTop from './components/BackToTop'
 import ChatBot from './components/ChatBot'
-import { useEffect } from 'react'
+import { useEffect, useState } from 'react'
+import { AnimatePresence } from 'framer-motion'
+import IntroScreen from './components/IntroScreen'
 import { initSmoothScroll } from './lib/smoothScroll'
 
 export default function App() {
   useEffect(() => initSmoothScroll(), [])
+  // The entrance screen runs first; the page mounts as it lifts away so the
+  // hero plays its own entrance underneath.
+  const [intro, setIntro] = useState(true)
 
   return (
     <div className="relative min-h-screen overflow-x-clip">
+      <AnimatePresence>{intro && <IntroScreen onDone={() => setIntro(false)} />}</AnimatePresence>
+      {intro ? null : (
+      <>
       {/* Fixed decorative background: raining letters + gradient glows */}
       <div className="pointer-events-none fixed inset-0 -z-10 bg-base">
       </div>
@@ -34,6 +42,8 @@ export default function App() {
       </main>
       <Footer />
       <BackToTop />
+      </>
+      )}
     </div>
   )
 }

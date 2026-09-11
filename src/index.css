@@ -194,6 +194,16 @@
   transform: none;
 }
 
+/* Intro screen: tile columns drift up or down in an endless loop. */
+@keyframes intro-up {
+  from { transform: translateY(0); }
+  to { transform: translateY(-50%); }
+}
+@keyframes intro-down {
+  from { transform: translateY(-50%); }
+  to { transform: translateY(0); }
+}
+
 /* Custom scrollbar. */
 @media (pointer: fine) {
   ::-webkit-scrollbar {

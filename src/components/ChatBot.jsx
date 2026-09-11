@@ -22,7 +22,7 @@ const ALIVE = { y: [0, -8, 0], rotate: [0, -4, 0, 4, 0], scale: [1, 1.04, 1] }
 const ALIVE_T = { duration: 3.2, repeat: Infinity, ease: 'easeInOut' }
 const openChat = () => window.dispatchEvent(new CustomEvent('open-chat'))
 
-function GreetingBadge() {
+export function GreetingBadge() {
   const [i, setI] = useState(0)
   useEffect(() => {
     const t = setInterval(() => setI((v) => (v + 1 + Math.floor(Math.random() * (GREETINGS.length - 1))) % GREETINGS.length), 2600)
@@ -45,11 +45,11 @@ function GreetingBadge() {
   )
 }
 
-function BotFace({ size }) {
+export function BotFace({ size, onClick = openChat }) {
   return (
     <motion.button
       type="button"
-      onClick={openChat}
+      onClick={onClick}
       aria-label={`Chat with ${firstName}'s assistant`}
       animate={ALIVE}
       transition={ALIVE_T}
